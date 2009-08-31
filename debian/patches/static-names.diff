@@ -1,0 +1,16 @@
+Author: Niko Tyni <ntyni@iki.fi>
+Description:
+ Fixes name of the static library on alpha, mips and mipsel (Closes: #390366)
+
+diff -Naurp expect.orig/configure expect/configure
+--- expect.orig/configure	2009-08-03 08:44:15.000000000 +0000
++++ expect/configure	2009-08-03 08:44:29.000000000 +0000
+@@ -6362,7 +6362,7 @@ if test -n "$TMPDIR" && test -d "$TMPDIR
+ else
+   ac_tmpdirs='/tmp /var/tmp /usr/tmp'
+ fi
+-for ac_dir in  . $ac_tmpdirs `eval echo $prefix/lib $exec_prefix/lib` ; do
++for ac_dir in  . $ac_tmpdirs ; do
+   test -d $ac_dir || continue
+   test -w $ac_dir || continue # It is less confusing to not echo anything here.
+   (echo 1 > $ac_dir/conftest9012345) 2>/dev/null

@@ -1,0 +1,23 @@
+Author: Ian Jackson <iwj@ubuntu.com>
+Description: expBusy forgets to open fdout (Closes: #440818).
+
+diff -Naurp expect.orig/exp_command.c expect/exp_command.c
+--- expect.orig/exp_command.c	2009-08-03 06:58:30.000000000 +0000
++++ expect/exp_command.c	2009-08-03 08:37:47.000000000 +0000
+@@ -310,7 +310,15 @@ expBusy(esPtr)
+     fcntl(x,F_DUPFD,esPtr->fdin);
+     close(x);
+   }
+-  expCloseOnExec(esPtr->fdin);
++  if (esPtr->fdout != EXP_NOFD &&
++      esPtr->fdout != esPtr->fdin) {
++    fcntl(esPtr->fdin,F_DUPFD,esPtr->fdout);
++  }
++  if (esPtr->fdin > 2)
++    expCloseOnExec(esPtr->fdin);
++  if (esPtr->fdout != EXP_NOFD &&
++      esPtr->fdout > 2)
++    expCloseOnExec(esPtr->fdout);
+   esPtr->fdBusy = TRUE;
+ }
+ 

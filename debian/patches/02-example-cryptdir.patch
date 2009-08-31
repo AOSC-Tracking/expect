@@ -1,0 +1,33 @@
+Author: Mike Markley <mike@markley.org>
+Description: Checks for /usr/bin/crypt in cryptdir example (Closes: #67197).
+
+diff -Naurp expect.orig/example/cryptdir expect/example/cryptdir
+--- expect.orig/example/cryptdir	2009-08-03 06:58:30.000000000 +0000
++++ expect/example/cryptdir	2009-08-03 08:32:57.000000000 +0000
+@@ -8,6 +8,11 @@
+ #
+ # Encrypt or decrypts the current directory or named directory if given.
+ 
++if {![file exists /usr/bin/crypt]} {
++    puts "This example requires the mcrypt package."
++    exit
++}
++
+ if {[llength $argv] > 0} {
+     cd $argv
+ }
+diff -Naurp expect.orig/example/decryptdir expect/example/decryptdir
+--- expect.orig/example/decryptdir	2009-08-03 06:58:30.000000000 +0000
++++ expect/example/decryptdir	2009-08-03 08:32:57.000000000 +0000
+@@ -8,6 +8,11 @@
+ #
+ # Encrypt or decrypts the current directory or named directory if given.
+ 
++if {![file exists /usr/bin/crypt]} {
++    puts "This example requires the mcrypt package."
++    exit
++}
++
+ if {[llength $argv] > 0} {
+     cd $argv
+ }

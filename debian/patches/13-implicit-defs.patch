@@ -1,0 +1,411 @@
+Author: LaMont Jones <lamont@debian.org>
+Description: Fix implicit definitions throughout (Closes: #441115).
+
+diff -Naurp expect.orig/Dbg.c expect/Dbg.c
+--- expect.orig/Dbg.c	2002-03-23 04:11:54.000000000 +0000
++++ expect/Dbg.c	2009-08-03 08:39:40.000000000 +0000
+@@ -8,6 +8,7 @@ would appreciate credit if this program 
+ 
+ */
+ 
++#include <unistd.h>
+ #include <stdio.h>
+ 
+ #include "tcldbgcf.h"
+diff -Naurp expect.orig/exp_chan.c expect/exp_chan.c
+--- expect.orig/exp_chan.c	2009-08-03 08:39:25.000000000 +0000
++++ expect/exp_chan.c	2009-08-03 08:39:40.000000000 +0000
+@@ -31,9 +31,11 @@
+ 
+ #include "string.h"
+ 
++#include "expect.h"
+ #include "exp_rename.h"
+ #include "exp_prog.h"
+ #include "exp_command.h"
++#include "exp_event.h"
+ #include "exp_log.h"
+ 
+ static int		ExpBlockModeProc _ANSI_ARGS_((ClientData instanceData,
+diff -Naurp expect.orig/exp_clib.c expect/exp_clib.c
+--- expect.orig/exp_clib.c	2009-08-03 08:39:25.000000000 +0000
++++ expect/exp_clib.c	2009-08-03 08:39:40.000000000 +0000
+@@ -7,6 +7,8 @@ dollars.  Therefore it is public domain.
+ would appreciate credit if this program or parts of it are used.
+ */
+ 
++#include <unistd.h>
++
+ #include "expect_cf.h"
+ #include <stdio.h>
+ #include <setjmp.h>
+@@ -116,7 +118,9 @@ extern unsigned long	strtoul _ANSI_ARGS_
+ #include <stdlib.h>		/* for malloc */
+ #endif
+ 
++#include "tcl.h"
+ #include "expect.h"
++#include "exp_command.h"
+ #define TclRegError exp_TclRegError
+ 
+ /*
+@@ -1463,6 +1467,7 @@ TclGetRegError()
+  * end of regexp definitions and code
+  */
+ 
++#if 0
+ /*
+  * following stolen from tcl8.0.4/generic/tclPosixStr.c
+  */
+@@ -1919,6 +1924,7 @@ Tcl_ErrnoMsg(err)
+ #endif
+     }
+ }
++#endif
+ 
+ /*
+  * end of excerpt from tcl8.0.X/generic/tclPosixStr.c
+diff -Naurp expect.orig/exp_command.c expect/exp_command.c
+--- expect.orig/exp_command.c	2009-08-03 08:39:25.000000000 +0000
++++ expect/exp_command.c	2009-08-03 08:39:40.000000000 +0000
+@@ -29,7 +29,6 @@ would appreciate credit if this program 
+ #  include <fcntl.h>
+ #endif
+ #include <sys/file.h>
+-#include "exp_tty.h"
+ 
+ #include <errno.h>
+ #include <signal.h>
+@@ -64,6 +63,7 @@ would appreciate credit if this program 
+ /*				objects to including varargs.h twice, just */
+ /*				omit this one. */
+ 
++#include "expect.h"
+ #include "tcl.h"
+ #include "string.h"
+ #include "expect_tcl.h"
+@@ -72,6 +72,7 @@ would appreciate credit if this program 
+ #include "exp_command.h"
+ #include "exp_log.h"
+ #include "exp_event.h"
++#include "exp_tty_in.h"
+ #include "exp_pty.h"
+ #ifdef TCL_DEBUGGER
+ #include "tcldbg.h"
+diff -Naurp expect.orig/exp_command.h expect/exp_command.h
+--- expect.orig/exp_command.h	2009-08-03 08:39:25.000000000 +0000
++++ expect/exp_command.h	2009-08-03 08:39:40.000000000 +0000
+@@ -7,6 +7,9 @@ dollars.  Therefore it is public domain.
+ would appreciate credit if this program or parts of it are used.
+ */
+ 
++#ifndef __EXP_COMMAND_H
++#define __EXP_COMMAND_H
++
+ #ifdef HAVE_SYS_WAIT_H
+   /* ISC doesn't def WNOHANG unless _POSIX_SOURCE is def'ed */
+ # ifdef WNOHANG_REQUIRES_POSIX_SOURCE
+@@ -23,7 +26,7 @@ would appreciate credit if this program 
+ # undef panic
+ #endif
+ 
+-#include <tclPort.h>
++#include "tclPort.h"
+ 
+ #define EXP_CHANNELNAMELEN (16 + TCL_INTEGER_SPACE)
+ 
+@@ -89,11 +92,11 @@ typedef struct ExpState {
+     char name[EXP_CHANNELNAMELEN+1]; /* expect and interact set variables
+ 				   to channel name, so for efficiency
+ 				   cache it here */
+-    int fdin;		/* input fd */
+-    int fdout;		/* output fd - usually the same as fdin, although
++    long fdin;		/* input fd - may be used for storing ClientData, a pointer */
++    long fdout;		/* output fd - usually the same as fdin, although
+ 			   may be different if channel opened by tcl::open */
+     Tcl_Channel channel_orig;   /* If opened by someone else, i.e. tcl::open */
+-    int fd_slave;	/* slave fd if "spawn -pty" used */
++    long fd_slave;	/* slave fd if "spawn -pty" used */
+ 
+     /* this may go away if we find it is not needed */
+     /* it might be needed by inherited channels */
+@@ -231,6 +234,7 @@ EXTERN void		exp_init_trap _ANSI_ARGS_((
+ EXTERN void		exp_init_send _ANSI_ARGS_((void));
+ EXTERN void		exp_init_unit_random _ANSI_ARGS_((void));
+ EXTERN void		exp_init_sig _ANSI_ARGS_((void));
++EXTERN void		exp_ecmd_remove_state_direct_and_indirect _ANSI_ARGS_((Tcl_Interp *interp,ExpState *esPtr));
+ EXTERN void		expChannelInit _ANSI_ARGS_((void));
+ EXTERN int		expChannelCountGet _ANSI_ARGS_((void));
+ 
+@@ -323,9 +327,13 @@ EXTERN void		expExpectVarsInit _ANSI_ARG
+ EXTERN int		expStateAnyIs _ANSI_ARGS_((ExpState *));
+ EXTERN int		expDevttyIs _ANSI_ARGS_((ExpState *));
+ EXTERN int		expStdinOutIs _ANSI_ARGS_((ExpState *));
++EXTERN int		expStdinoutIs _ANSI_ARGS_((ExpState *esPtr));
+ EXTERN ExpState *	expStdinoutGet _ANSI_ARGS_((void));
+ EXTERN ExpState *	expDevttyGet _ANSI_ARGS_((void));
+ 
++EXTERN int		Exp_StringCaseMatch _ANSI_ARGS_((char *string, char *pattern, int nocase, int *offset));
++
+ /* generic functions that really should be provided by Tcl */
+ EXTERN int		expSizeGet _ANSI_ARGS_((ExpState *));
+ EXTERN int		expSizeZero _ANSI_ARGS_((ExpState *));
++#endif /* __EXP_COMMAND_H */
+diff -Naurp expect.orig/exp_glob.c expect/exp_glob.c
+--- expect.orig/exp_glob.c	2002-03-23 04:11:54.000000000 +0000
++++ expect/exp_glob.c	2009-08-03 08:39:40.000000000 +0000
+@@ -11,10 +11,17 @@ would appreciate credit if this program 
+ 
+ */
+ 
++#include <string.h>
++
+ #include "expect_cf.h"
+ #include "tcl.h"
+ #include "exp_int.h"
+ 
++int Exp_StringCaseMatch2(
++	register CONST char *string,
++	register CONST char *pattern,
++	int nocase);
++
+ /* The following functions implement expect's glob-style string matching */
+ /* Exp_StringMatch allow's implements the unanchored front (or conversely */
+ /* the '^') feature.  Exp_StringMatch2 does the rest of the work. */
+diff -Naurp expect.orig/exp_inter.c expect/exp_inter.c
+--- expect.orig/exp_inter.c	2004-08-18 02:03:00.000000000 +0000
++++ expect/exp_inter.c	2009-08-03 08:39:40.000000000 +0000
+@@ -42,6 +42,7 @@ would appreciate credit if this program 
+ #include "exp_rename.h"
+ #include "exp_prog.h"
+ #include "exp_command.h"
++#include "exp_event.h"
+ #include "exp_log.h"
+ 
+ typedef struct ThreadSpecificData {
+diff -Naurp expect.orig/exp_main_exp.c expect/exp_main_exp.c
+--- expect.orig/exp_main_exp.c	2009-08-03 08:39:25.000000000 +0000
++++ expect/exp_main_exp.c	2009-08-03 08:39:40.000000000 +0000
+@@ -12,6 +12,7 @@ would appreciate credit if this program 
+ 
+ #include "expect_cf.h"
+ #include <stdio.h>
++#include <stdlib.h>
+ #include "tcl.h"
+ #include "expect_tcl.h"
+ 
+diff -Naurp expect.orig/exp_main_sub.c expect/exp_main_sub.c
+--- expect.orig/exp_main_sub.c	2009-08-03 08:39:25.000000000 +0000
++++ expect/exp_main_sub.c	2009-08-03 08:39:40.000000000 +0000
+@@ -2,6 +2,7 @@
+ 
+ #include "expect_cf.h"
+ #include <stdio.h>
++#include <getopt.h>
+ #include <errno.h>
+ #ifdef HAVE_INTTYPES_H
+ #  include <inttypes.h>
+diff -Naurp expect.orig/exp_main_tk.c expect/exp_main_tk.c
+--- expect.orig/exp_main_tk.c	2009-08-03 08:39:25.000000000 +0000
++++ expect/exp_main_tk.c	2009-08-03 08:39:40.000000000 +0000
+@@ -38,11 +38,19 @@ static char sccsid[] = "@(#) tkAppInit.c
+ #include <ctype.h>
+ #include <string.h>  /* strrchr(3) */
+ 
++#include	"tclInt.h"	/* Internal definitions for Tcl. */
++#include "tcl.h"
++
+ #include "tk.h"
++#include "tkInt.h"
+ 
+ #include "expect_tcl.h"
+ #include "tcldbg.h"
+ 
++#include "expect.h"
++#include "exp_command.h"
++#include "exp_log.h"
++
+ #if (TCL_MAJOR_VERSION < 8) || ((TCL_MAJOR_VERSION == 8) && (TCL_MINOR_VERSION < 4))
+ /*
+  * The following variable is a special hack that is needed in order for
+@@ -56,6 +64,8 @@ int *tclDummyMathPtr = (int *) matherr;
+ #ifdef TK_TEST
+ EXTERN int		Tktest_Init _ANSI_ARGS_((Tcl_Interp *interp));
+ #endif /* TK_TEST */
++int Tk_Init2(Tcl_Interp *interp);
++
+ 
+ /*
+  *----------------------------------------------------------------------
+@@ -386,7 +396,7 @@ Tk_Init2(interp)
+      * Invoke platform-specific initialization.
+      */
+ 
+-    code = TkpInit(interp, 0);
++    code = TkpInit(interp);
+ 
+     done:
+     if (argv != NULL) {
+diff -Naurp expect.orig/exp_trap.c expect/exp_trap.c
+--- expect.orig/exp_trap.c	2009-08-03 08:39:25.000000000 +0000
++++ expect/exp_trap.c	2009-08-03 08:39:40.000000000 +0000
+@@ -28,6 +28,7 @@ would appreciate credit if this program 
+ #include "exp_prog.h"
+ #include "exp_command.h"
+ #include "exp_log.h"
++#include "exp_event.h"
+ 
+ #ifdef TCL_DEBUGGER
+ #include "tcldbg.h"
+diff -Naurp expect.orig/exp_tty.c expect/exp_tty.c
+--- expect.orig/exp_tty.c	2004-05-07 16:23:26.000000000 +0000
++++ expect/exp_tty.c	2009-08-03 08:39:40.000000000 +0000
+@@ -36,6 +36,7 @@
+ #include "exp_tty_in.h"
+ #include "exp_command.h"
+ #include "exp_log.h"
++#include "exp_win.h"
+ 
+ static int is_raw = FALSE;
+ static int is_noecho = FALSE;
+diff -Naurp expect.orig/exp_tty.h expect/exp_tty.h
+--- expect.orig/exp_tty.h	2002-02-12 02:00:55.000000000 +0000
++++ expect/exp_tty.h	2009-08-03 08:39:40.000000000 +0000
+@@ -21,6 +21,7 @@ void exp_tty_break();
+ int exp_tty_raw_noecho();
+ int exp_israw();
+ int exp_isecho();
++EXTERN int exp_tty_cooked_echo _ANSI_ARGS_((Tcl_Interp *interp, exp_tty *tty_old, int *was_raw, int *was_echo));
+ 
+ void exp_tty_set();
+ int exp_tty_set_simple();
+diff -Naurp expect.orig/exp_tty_in.h expect/exp_tty_in.h
+--- expect.orig/exp_tty_in.h	2002-02-12 02:00:55.000000000 +0000
++++ expect/exp_tty_in.h	2009-08-03 08:39:40.000000000 +0000
+@@ -11,6 +11,8 @@
+ #define __EXP_TTY_IN_H__
+ 
+ #include "expect_cf.h"
++#include "expect.h"
++#include "tcl.h"
+ 
+ #ifdef __MACHTEN__
+ #include "sys/types.h"
+diff -Naurp expect.orig/exp_win.c expect/exp_win.c
+--- expect.orig/exp_win.c	2002-02-12 02:00:55.000000000 +0000
++++ expect/exp_win.c	2009-08-03 08:39:40.000000000 +0000
+@@ -51,7 +51,8 @@ conflicts with sys/ioctl.h
+ #   include <sys/ptem.h>
+ #endif /* HAVE_SYS_PTEM_H */
+ 
+-#include "exp_tty.h"
++#include "expect.h"
++#include "exp_tty_in.h"
+ #include "exp_win.h"
+ 
+ #ifdef TIOCGWINSZ
+diff -Naurp expect.orig/exp_win.h expect/exp_win.h
+--- expect.orig/exp_win.h	2002-02-12 02:00:56.000000000 +0000
++++ expect/exp_win.h	2009-08-03 08:39:40.000000000 +0000
+@@ -1,3 +1,5 @@
++#ifndef __EXP_WIN_H
++#define __EXP_WIN_H
+ /* exp_win.h - window support
+ 
+ Written by: Don Libes, NIST, 10/25/93
+@@ -6,15 +8,17 @@ This file is in the public domain.  Howe
+ would appreciate credit if you use this file or parts of it.
+ */
+ 
+-int exp_window_size_set();
+-int exp_window_size_get();
++EXTERN int exp_window_size_set _ANSI_ARGS_((int fd));
++EXTERN int exp_window_size_get _ANSI_ARGS_((int fd));
+ 
+-void exp_win_rows_set();
+-void exp_win_rows_get();
+-void exp_win_columns_set();
+-void exp_win_columns_get();
+-
+-void exp_win2_rows_set();
+-void exp_win2_rows_get();
+-void exp_win2_columns_set();
+-void exp_win2_columns_get();
++EXTERN void exp_win_rows_set _ANSI_ARGS_((char *rows));
++EXTERN void exp_win_rows_get _ANSI_ARGS_((char *rows));
++EXTERN void exp_win_columns_set _ANSI_ARGS_((char *columns));
++EXTERN void exp_win_columns_get _ANSI_ARGS_((char *columns));
++
++EXTERN void exp_win2_rows_set _ANSI_ARGS_((int fd, char *rows));
++EXTERN void exp_win2_rows_get _ANSI_ARGS_((int fd, char *rows));
++EXTERN void exp_win2_columns_set _ANSI_ARGS_((int fd, char *columns));
++EXTERN void exp_win2_columns_get _ANSI_ARGS_((int fd, char *columns));
++
++#endif /* __EXP_WIN_H */
+diff -Naurp expect.orig/expect.c expect/expect.c
+--- expect.orig/expect.c	2009-08-03 08:39:25.000000000 +0000
++++ expect/expect.c	2009-08-03 08:39:40.000000000 +0000
+@@ -10,6 +10,8 @@ would appreciate credit if this program 
+ 
+ #include <sys/types.h>
+ #include <stdio.h>
++#include <stdarg.h>
++#include <string.h>
+ #include <signal.h>
+ #include <errno.h>
+ #include <ctype.h>	/* for isspace */
+@@ -29,12 +31,13 @@ would appreciate credit if this program 
+ 
+ #include "string.h"
+ 
++#include "expect.h"
++#include "exp_tty_in.h"
+ #include "exp_rename.h"
+ #include "exp_prog.h"
+ #include "exp_command.h"
+ #include "exp_log.h"
+ #include "exp_event.h"
+-#include "exp_tty.h"
+ #include "exp_tstamp.h"	/* this should disappear when interact */
+ 			/* loses ref's to it */
+ #ifdef TCL_DEBUGGER
+diff -Naurp expect.orig/pty_termios.c expect/pty_termios.c
+--- expect.orig/pty_termios.c	2009-08-03 08:39:25.000000000 +0000
++++ expect/pty_termios.c	2009-08-03 08:39:40.000000000 +0000
+@@ -9,13 +9,18 @@ would appreciate credit if you use this 
+ 
+ #include <stdio.h>
+ #include <signal.h>
++#include <string.h>
++#include <pty.h>
++#include <utmp.h>
+ 
+ #if defined(SIGCLD) && !defined(SIGCHLD)
+ #define SIGCHLD SIGCLD
+ #endif
+ 
+-#include "expect.h"
+ #include "expect_cf.h"
++#include "tcl.h"
++#include "expect.h"
++#include "exp_tty_in.h"
+ #include "exp_int.h"  /* expErrnoMsg() prototype */
+ 
+ /*
+@@ -98,7 +103,6 @@ with openpty which supports 4000 while p
+ 
+ #include "exp_win.h"
+ 
+-#include "exp_tty_in.h"
+ #include "exp_rename.h"
+ #include "exp_pty.h"
+ 
+@@ -368,7 +372,7 @@ exp_init_pty()
+ #define W_OK 02
+ #endif
+ 
+-static int ttyname_checked(int fd) {
++static char * ttyname_checked(int fd) {
+ 	const char *result;
+ 	result= ttyname(fd);
+ 	if (!result) {

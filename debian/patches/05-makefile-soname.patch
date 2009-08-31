@@ -1,0 +1,15 @@
+Author: Mike Markley <mike@markley.org>
+Description: Adds '-soname' to the Makefile.
+
+diff -Naurp expect.orig/Makefile.in expect/Makefile.in
+--- expect.orig/Makefile.in	2009-08-03 06:58:30.000000000 +0000
++++ expect/Makefile.in	2009-08-03 08:34:51.000000000 +0000
+@@ -413,7 +413,7 @@ $(EXP_UNSHARED_LIB_FILE): $(OFILES)
+ expect-shared-lib-file :: $(EXP_SHARED_LIB_FILE)
+ $(EXP_SHARED_LIB_FILE): $(OFILES)
+ 	-rm -f $(EXP_SHARED_LIB_FILE)
+-	@TCL_SHLIB_LD@ -o $(EXP_SHARED_LIB_FILE) $(SHARED_OFILES) @EXP_LD_SEARCH_FLAGS@ @EXP_SHLIB_LD_LIBS@
++	@TCL_SHLIB_LD@ -o $(EXP_SHARED_LIB_FILE) $(SHARED_OFILES) @EXP_LD_SEARCH_FLAGS@ @EXP_SHLIB_LD_LIBS@ -Wl,-soname,$(SONAME)
+ 
+ .PHONY: install-info install info
+ install-info:

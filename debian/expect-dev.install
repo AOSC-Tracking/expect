@@ -1,0 +1,4 @@
+/usr/bin/expect_*
+/usr/include/*
+/usr/lib/*.a
+/usr/share/man/man1/expect_*

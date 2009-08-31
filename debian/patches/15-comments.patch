@@ -1,0 +1,77 @@
+Author: n/a
+Description: Fix header comments.
+
+diff -Naurp expect.orig/expect_cf.h.in expect/expect_cf.h.in
+--- expect.orig/expect_cf.h.in	2009-08-03 06:58:30.000000000 +0000
++++ expect/expect_cf.h.in	2009-08-03 08:58:57.000000000 +0000
+@@ -4,7 +4,8 @@
+ #ifndef __EXPECT_CF_H__
+ #define __EXPECT_CF_H__
+ 
+-#undef NO_STDLIB_H		/* Tcl requires this name */
++/* Tcl requires this name */
++#undef NO_STDLIB_H
+ #undef NO_UNION_WAIT
+ #undef HAVE_STDARG_H
+ #undef HAVE_VARARGS_H
+@@ -12,12 +13,18 @@
+ #undef HAVE_SYSCONF_H
+ #undef HAVE_SYS_FCNTL_H
+ #undef HAVE_SYS_WAIT_H
+-#undef HAVE_SYS_BSDTYPES_H	/* nice ISC special */
+-#undef HAVE_SYS_SELECT_H	/* nice ISC special */
+-#undef HAVE_SYS_TIME_H		/* nice ISC special */
+-#undef HAVE_SYS_PTEM_H		/* SCO needs this for window size */
+-#undef HAVE_STRREDIR_H		/* Solaris needs this for console redir */
+-#undef HAVE_STRPTY_H		/* old-style Dynix ptys need this */
++/* nice ISC special */
++#undef HAVE_SYS_BSDTYPES_H
++/* nice ISC special */
++#undef HAVE_SYS_SELECT_H
++/* nice ISC special */
++#undef HAVE_SYS_TIME_H
++/* SCO needs this for window size */
++#undef HAVE_SYS_PTEM_H
++/* Solaris needs this for console redir */
++#undef HAVE_STRREDIR_H
++/* old-style Dynix ptys need this */
++#undef HAVE_STRPTY_H
+ #undef HAVE_UNISTD_H
+ #undef HAVE_SYSMACROS_H
+ #undef HAVE_INTTYPES_H
+@@ -26,8 +33,10 @@
+ 
+ #undef pid_t
+ #undef RETSIGTYPE
+-#undef TIME_WITH_SYS_TIME	/* ok to include both time.h and sys/time.h */
+-#undef SETPGRP_VOID		/* if setpgrp takes 0 args */
++/* ok to include both time.h and sys/time.h */
++#undef TIME_WITH_SYS_TIME
++/* if setpgrp takes 0 args */
++#undef SETPGRP_VOID
+ 
+ /*
+  * This section is for compile macros needed by
+@@ -42,7 +51,8 @@
+ #undef SIMPLE_EVENT
+ #undef HAVE_STRFTIME
+ #undef HAVE_MEMMOVE
+-#undef HAVE_TIMEZONE		/* timezone() a la Pyramid */
++/* timezone() a la Pyramid */
++#undef HAVE_TIMEZONE
+ #undef HAVE_SIGLONGJMP
+ #undef HAVE_STRCHR
+ 
+diff -Naurp expect.orig/tcldbgcf.h.in expect/tcldbgcf.h.in
+--- expect.orig/tcldbgcf.h.in	2009-08-03 06:58:30.000000000 +0000
++++ expect/tcldbgcf.h.in	2009-08-03 08:58:57.000000000 +0000
+@@ -7,7 +7,8 @@
+ #ifndef __NIST_DBG_CF_H__
+ #define __NIST_DBG_CF_H__
+ 
+-#undef NO_STDLIB_H		/* Tcl requires this name */
++/* Tcl requires this name */
++#undef NO_STDLIB_H
+ 
+ /*
+  * Check for functions

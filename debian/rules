@@ -1,0 +1,61 @@
+#!/usr/bin/make -f
+
+SHELL := sh -e
+
+%:
+	dh ${@} --with quilt
+
+CFLAGS = -Wall -g -D_BSD_SOURCE
+
+override_dh_auto_clean:
+	dh_auto_clean
+
+	rm -f *.a *.o
+	rm -rf shared
+
+	rm -f config.guess config.sub
+
+override_dh_auto_configure:
+	cp -f /usr/share/misc/config.guess config.guess
+	cp -f /usr/share/misc/config.sub config.sub
+
+	autoconf2.13
+	patch -Np1 -i debian/patches/static-names.diff
+
+	dh_auto_configure -- --includedir=/usr/include/tcl8.4 --with-tcl=/usr/lib/tcl8.4 --with-tk=/usr/lib/tk8.4 --with-tclinclude=/usr/include/tcl8.4/tcl-private --with-tkinclude=/usr/include/tcl8.4/tk-private --enable-shared --enable-threads CFLAGS="$(CFLAGS) -D_BSD_SOURCE -ansi -D_SVID_SOURCE -D_POSIX_SOURCE -D_REENTRANT"
+
+override_dh_auto_build:
+	$(MAKE) SONAME=libexpect.so.5.43.0
+
+override_dh_auto_install:
+	$(MAKE) INSTALL_ROOT=$(CURDIR)/debian/tmp install
+
+	# Renaming expect scripts
+	for SCRIPT in debian/tmp/usr/bin/*; \
+	do \
+		if [ "`basename $$SCRIPT`" != "expect" ] && [ "`basename $$SCRIPT`" != "expectk" ]; \
+		then \
+			mv $$SCRIPT `dirname $$SCRIPT`/expect_`basename $$SCRIPT`; \
+		fi; \
+	done
+
+	for MANPAGE in debian/tmp/usr/share/man/man1/*; \
+	do \
+		if [ "`basename $$MANPAGE`" != "expect.1" ] && [ "`basename $$MANPAGE`" != "expectk.1" ]; \
+		then \
+			mv $$MANPAGE `dirname $$MANPAGE`/expect_`basename $$MANPAGE`; \
+		fi; \
+	done
+
+	# Fixing library name
+	mv debian/tmp/usr/lib/libexpect5.43.so debian/tmp/usr/lib/libexpect.so.5.43.0
+	mv debian/tmp/usr/lib/libexpect5.43.a debian/tmp/usr/lib/libexpect.a
+
+	# Fixing permissions
+	chmod 0644 debian/tmp/usr/lib/expect*/pkgIndex.tcl
+
+override_dh_installchangelogs:
+	dh_installchangelogs HISTORY
+
+override_dh_install:
+	dh_install --fail-missing
