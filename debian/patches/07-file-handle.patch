@@ -5,7 +5,7 @@ Description:
 diff -Naurp expect.orig/exp_clib.c expect/exp_clib.c
 --- expect.orig/exp_clib.c	2009-08-03 06:58:30.000000000 +0000
 +++ expect/exp_clib.c	2009-08-03 08:36:54.000000000 +0000
-@@ -2500,6 +2500,7 @@ when trapping, see below in child half o
+@@ -2502,6 +2502,7 @@ when trapping, see below in child half o
  
  	/* save error fd while we're setting up new one */
  	errorfd = fcntl(2,F_DUPFD,3);
@@ -16,11 +16,11 @@ diff -Naurp expect.orig/exp_clib.c expect/exp_clib.c
 diff -Naurp expect.orig/exp_command.c expect/exp_command.c
 --- expect.orig/exp_command.c	2009-08-03 06:58:30.000000000 +0000
 +++ expect/exp_command.c	2009-08-03 08:36:54.000000000 +0000
-@@ -1048,6 +1048,7 @@ when trapping, see below in child half o
+@@ -1162,6 +1162,7 @@ when trapping, see below in child half o
  
- 	/* save error fd while we're setting up new one */
- 	errorfd = fcntl(2,F_DUPFD,3);
-+	fcntl(3, F_SETFD, FD_CLOEXEC);
- 	/* and here is the macro to restore it */
+     /* save error fd while we're setting up new one */
+     errorfd = fcntl(2,F_DUPFD,3);
++    fcntl(3, F_SETFD, FD_CLOEXEC);
+     /* and here is the macro to restore it */
  #define restore_error_fd {close(2);fcntl(errorfd,F_DUPFD,2);}
  

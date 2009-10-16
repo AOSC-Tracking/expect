@@ -1,3 +1,28 @@
+expect (5.44.1.14-1) unstable; urgency=low
+
+  * New maintainer Sergei Golovan <sgolovan@debian.org> (closes: #543839).
+  * New upstream CVS snapshot.
+  * Switched to upstream which maintains CVN at SourceForge.net because
+    Don Libet doesn't have time to develop Expect anymore. Therefore, changed
+    upstream homepage.
+  * Switched to Tcl/Tk 8.5 (closes: #512150).
+  * Don't call configure and build targets twice anymore (closes: #441114).
+  * Upstream includes patch which fixes empty writes (closes: #421187).
+  * The new upstream fixed a regression which didn't allow to read from stdin
+    (closes: #347259).
+  * Added README.source with a link to /usr/share/doc/quilt/README.source
+    where an instruction on how to patch upstream sources is located.
+  * Removed examples from /usr/share/doc/expect-dev/examples because all of
+    them are shipped in /usr/bin directory. This makes uncompressing them
+    unnecessary (closes: #495605).
+  * Added links all expect_* script to their original names, except mkpasswd,
+    rftp and weather to avoid conflicts with other packages
+    (closes: #508320, #532332).
+  * Upstream removed useless "puts hello" from multixterm script
+    (closes: #550909).
+
+ -- Sergei Golovan <sgolovan@debian.org>  Fri, 16 Oct 2009 23:39:56 +0400
+
 expect (5.43.0-19) unstable; urgency=low
 
   * Updating package to standards version 3.8.3.

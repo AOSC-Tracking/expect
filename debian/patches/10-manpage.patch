@@ -225,7 +225,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
      proc lognumber {} {
 -        interact -nobuffer -re "(.*)\\r" return
 +        interact \-nobuffer \-re "(.*)\\r" return
-         puts $log "[exec date]: dialed $interact_out(1,string)"
+         puts $log "[clock format [clock seconds]]: dialed $interact_out(1,string)"
      }
  
 -    interact -nobuffer "atd" lognumber
@@ -383,7 +383,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
 +The expect_background command ignores \-timeout arguments and has no
  concept of timeouts in general.
  
- .SH EXPECT HINTS
+ .SH "EXPECT HINTS"
 @@ -2447,7 +2448,7 @@ can be used.  If EXPECT_PROMPT doesn't e
      set prompt "(%|#|\\\\$) $"          ;# default prompt
      catch {set prompt $env(EXPECT_PROMPT)}

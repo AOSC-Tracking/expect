@@ -1,11 +1,12 @@
 Source: expect
 Section: interpreters
 Priority: optional
-Maintainer: Debian QA Group <packages@qa.debian.org>
+Maintainer: Sergei Golovan <sgolovan@debian.org>
 Build-Depends:
- debhelper (>= 7), quilt, autotools-dev, autoconf2.13, tcl8.4-dev, tk8.4-dev
+ debhelper (>= 7.0.50~), quilt (>=0.46-7), autotools-dev, autoconf, tcl8.5-dev, tk8.5-dev,
+ x11proto-core-dev, libx11-dev, libxss-dev, libxext-dev, libxft-dev
 Standards-Version: 3.8.3
-Homepage: http://expect.nist.gov/
+Homepage: http://sourceforge.net/projects/expect/
 
 Package: expect
 Architecture: any
@@ -37,7 +38,8 @@ Description: A program that can automate interactive applications (Tk hooks)
 Package: expect-dev
 Section: devel
 Architecture: any
-Depends: ${misc:Depends}, expect (= ${binary:Version}), tcl8.4-dev, tk8.4-dev
+Depends: ${misc:Depends}, expect (= ${binary:Version}), tcl8.5-dev
+Recommends: expectk (= ${binary:Version}), tk8.5-dev
 Description: A program that can automate interactive applications (development)
  Expect is a tool for automating interactive applications according to a script.
  Following the script, Expect knows what can be expected from a program and what

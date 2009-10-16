@@ -1,14 +1,25 @@
 Author: Michael A. Cleverly <michael@cleverly.com>
+Modified by Sergei Golovan <sgolovan@debian.org>
 Description:
  Fixes stupid typo in pkgIndex.in (Closes: #186179).
  Adjusted for new soname (Closes: #381052).
 
-diff -Naurp expect.orig/pkgIndex.in expect/pkgIndex.in
---- expect.orig/pkgIndex.in	2009-08-03 06:58:30.000000000 +0000
-+++ expect/pkgIndex.in	2009-08-03 08:35:18.000000000 +0000
+--- expect.orig/Makefile.in
++++ expect/Makefile.in
+@@ -331,7 +331,7 @@
+ 
+ pkgIndex.tcl-hand:
+ 	(echo 'package ifneeded Expect $(PACKAGE_VERSION) \
+-	    [list load [file join $$dir $(PKG_LIB_FILE)]]'\
++	    [list load [file join @prefix@ lib libexpect.so.@PACKAGE_VERSION@]]'\
+ 	) > pkgIndex.tcl
+ 
+ #========================================================================
+--- expect.orig/pkgIndex.in
++++ expect/pkgIndex.in
 @@ -7,4 +7,4 @@
  # script is sourced, the variable $dir must contain the
  # full path name of this file's directory.
  
 -package ifneeded Expect @EXP_VERSION_FULL@ [list load [file join $dir .. @EXP_SHARED_LIB_FILE@]]
-+package ifneeded Expect @EXP_VERSION_FULL@ [list load [file join @prefix@ lib libexpect.so.@EXP_VERSION_FULL@]]
++package ifneeded Expect @EXP_VERSION_FULL@ [list load [file join @prefix@ lib libexpect.so.@PACKAGE_VERSION@]]

@@ -1,5 +1,4 @@
 /usr/bin/expect
 /usr/lib/*.so.*
-/usr/lib/expect*
+/usr/lib/tcltk/*
 /usr/share/man/man1/expect.*
-/usr/share/man/man3/libexpect.*

@@ -1,5 +1,8 @@
 #!/usr/bin/make -f
 
+DATE = 2009-08-31
+VERSION = 5.44.1.14
+
 SHELL := sh -e
 
 %:
@@ -19,43 +22,57 @@ override_dh_auto_configure:
 	cp -f /usr/share/misc/config.guess config.guess
 	cp -f /usr/share/misc/config.sub config.sub
 
-	autoconf2.13
-	patch -Np1 -i debian/patches/static-names.diff
+	autoconf
+	#patch -Np1 -i debian/patches/static-names.diff
 
-	dh_auto_configure -- --includedir=/usr/include/tcl8.4 --with-tcl=/usr/lib/tcl8.4 --with-tk=/usr/lib/tk8.4 --with-tclinclude=/usr/include/tcl8.4/tcl-private --with-tkinclude=/usr/include/tcl8.4/tk-private --enable-shared --enable-threads CFLAGS="$(CFLAGS) -D_BSD_SOURCE -ansi -D_SVID_SOURCE -D_POSIX_SOURCE -D_REENTRANT"
+	dh_auto_configure -- --includedir=/usr/include/tcl8.5 \
+			     --with-tcl=/usr/lib/tcl8.5 \
+			     --with-tk=/usr/lib/tk8.5 \
+			     --with-tclinclude=/usr/include/tcl8.5/tcl-private \
+			     --with-tkinclude=/usr/include/tcl8.5/tk-private/generic \
+			     --enable-shared \
+			     --enable-threads \
+			     CFLAGS="$(CFLAGS) -D_BSD_SOURCE -ansi -D_SVID_SOURCE -D_POSIX_SOURCE -D_REENTRANT"
 
 override_dh_auto_build:
-	$(MAKE) SONAME=libexpect.so.5.43.0
+	$(MAKE) SONAME=libexpect.so.$(VERSION)
 
 override_dh_auto_install:
-	$(MAKE) INSTALL_ROOT=$(CURDIR)/debian/tmp install
+	$(MAKE) DESTDIR=$(CURDIR)/debian/tmp install
 
 	# Renaming expect scripts
-	for SCRIPT in debian/tmp/usr/bin/*; \
-	do \
-		if [ "`basename $$SCRIPT`" != "expect" ] && [ "`basename $$SCRIPT`" != "expectk" ]; \
-		then \
-			mv $$SCRIPT `dirname $$SCRIPT`/expect_`basename $$SCRIPT`; \
-		fi; \
+	for SCRIPT in debian/tmp/usr/bin/*; do \
+	    if [ "`basename $$SCRIPT`" != "expect" ] && [ "`basename $$SCRIPT`" != "expectk" ]; then \
+		mv $$SCRIPT `dirname $$SCRIPT`/expect_`basename $$SCRIPT`; \
+	    fi; \
 	done
 
-	for MANPAGE in debian/tmp/usr/share/man/man1/*; \
-	do \
-		if [ "`basename $$MANPAGE`" != "expect.1" ] && [ "`basename $$MANPAGE`" != "expectk.1" ]; \
-		then \
-			mv $$MANPAGE `dirname $$MANPAGE`/expect_`basename $$MANPAGE`; \
-		fi; \
+	for MANPAGE in debian/tmp/usr/share/man/man1/*; do \
+	    if [ "`basename $$MANPAGE`" != "expect.1" ] && [ "`basename $$MANPAGE`" != "expectk.1" ]; then \
+		mv $$MANPAGE `dirname $$MANPAGE`/expect_`basename $$MANPAGE`; \
+	    fi; \
 	done
 
 	# Fixing library name
-	mv debian/tmp/usr/lib/libexpect5.43.so debian/tmp/usr/lib/libexpect.so.5.43.0
-	mv debian/tmp/usr/lib/libexpect5.43.a debian/tmp/usr/lib/libexpect.a
+	mv debian/tmp/usr/lib/expect$(VERSION)/libexpect$(VERSION).so debian/tmp/usr/lib/libexpect.so.$(VERSION)
+	mkdir -p -m 755 debian/tmp/usr/lib/tcltk
+	mv debian/tmp/usr/lib/expect$(VERSION) debian/tmp/usr/lib/tcltk
 
 	# Fixing permissions
-	chmod 0644 debian/tmp/usr/lib/expect*/pkgIndex.tcl
+	chmod 0644 debian/tmp/usr/lib/tcltk/expect$(VERSION)/pkgIndex.tcl
 
 override_dh_installchangelogs:
 	dh_installchangelogs HISTORY
 
 override_dh_install:
 	dh_install --fail-missing
+
+get-orig-source:
+	CURDIR=$$(pwd) && \
+	TMPDIR=$$(mktemp -d /tmp/expect.XXXXXX) && \
+	cd $$TMPDIR && \
+	cvs -d:pserver:anonymous@expect.cvs.sourceforge.net:/cvsroot/expect export -D $(DATE) expect && \
+	mv expect expect-$(VERSION) && \
+	tar -zcf $$CURDIR/expect_$(VERSION).orig.tar.gz . && \
+	rm -rf $$TMPDIR
+
