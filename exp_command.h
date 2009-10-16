@@ -35,8 +35,10 @@ EXTERN int exp_default_rm_nulls;
 EXTERN int exp_default_close_on_eof;
 
 EXTERN int		exp_one_arg_braced _ANSI_ARGS_((Tcl_Obj *));
-EXTERN int		exp_eval_with_one_arg _ANSI_ARGS_((ClientData,
+
+EXTERN Tcl_Obj*		exp_eval_with_one_arg _ANSI_ARGS_((ClientData,
 				Tcl_Interp *, struct Tcl_Obj * CONST objv[]));
+
 EXTERN void		exp_lowmemcpy _ANSI_ARGS_((char *,char *,int));
 
 EXTERN int exp_flageq_code _ANSI_ARGS_((char *,char *,int));
@@ -80,6 +82,19 @@ EXTERN int exp_flageq_code _ANSI_ARGS_((char *,char *,int));
  * This structure describes per-instance state of an Exp channel.
  */
 
+typedef struct ExpOrigin {
+  int         refCount;       /* Number of times this channel is used. */
+  Tcl_Channel channel_orig;   /* If opened by someone else, i.e. tcl::open */
+} ExpOrigin;
+
+
+typedef struct ExpUniBuf {
+    Tcl_UniChar* buffer;    /* char buffer, holdings unicode chars (fixed width) */
+    int          max;       /* number of CHARS the buffer has space for (== old msize) */
+    int          use;       /* number of CHARS the buffer is currently holding */
+    Tcl_Obj*     newchars;  /* Object to hold newly read characters */
+} ExpUniBuf;
+
 typedef struct ExpState {
     Tcl_Channel channel;	/* Channel associated with this file. */
     char name[EXP_CHANNELNAMELEN+1]; /* expect and interact set variables
@@ -88,7 +103,7 @@ typedef struct ExpState {
     int fdin;		/* input fd */
     int fdout;		/* output fd - usually the same as fdin, although
 			   may be different if channel opened by tcl::open */
-    Tcl_Channel channel_orig;   /* If opened by someone else, i.e. tcl::open */
+    ExpOrigin* chan_orig;   /* If opened by someone else, i.e. tcl::open */
     int fd_slave;	/* slave fd if "spawn -pty" used */
 
     /* this may go away if we find it is not needed */
@@ -98,14 +113,14 @@ typedef struct ExpState {
 				 * which operations are valid on the file. */
 
     int pid;		/* pid or EXP_NOPID if no pid */
-    Tcl_Obj *buffer;	/* input buffer */
 
-    int msize;	        /* # of bytes that buffer can hold (max) */
+    ExpUniBuf input;    /* input buffer */
+
     int umsize;	        /* # of bytes (min) that is guaranteed to match */
 			/* this comes from match_max command */
-    int printed;	/* # of bytes written to stdout (if logging on) */
+    int printed;	/* # of characters! written to stdout (if logging on) */
                         /* but not actually returned via a match yet */
-    int echoed;	        /* additional # of bytes (beyond "printed" above) */
+    int echoed;	        /* additional # of characters (beyond "printed" above) */
                         /* echoed back but not actually returned via a match */
                         /* yet.  This supports interact -echo */
 
@@ -196,6 +211,7 @@ extern Tcl_ChannelType expChannelType;
 
 EXTERN void		expAdjust _ANSI_ARGS_((ExpState *));
 EXTERN int		expWriteChars _ANSI_ARGS_((ExpState *,char *,int));
+EXTERN int		expWriteCharsUni _ANSI_ARGS_((ExpState *,Tcl_UniChar *,int));
 EXTERN void		exp_buffer_shuffle _ANSI_ARGS_((Tcl_Interp *,ExpState *,int,char *,char *));
 EXTERN int		exp_close _ANSI_ARGS_((Tcl_Interp *,ExpState *));
 EXTERN void		exp_close_all _ANSI_ARGS_((Tcl_Interp *));
@@ -204,7 +220,7 @@ EXTERN void		exp_ecmd_remove_fd_direct_and_indirect
 EXTERN void		exp_trap_on _ANSI_ARGS_((int));
 EXTERN int		exp_trap_off _ANSI_ARGS_((char *));
 
-EXTERN void		exp_strftime();
+EXTERN void		exp_strftime(char *format, const struct tm *timeptr,Tcl_DString *dstring);
 
 #define exp_deleteProc (void (*)())0
 #define exp_deleteObjProc (void (*)())0
@@ -317,10 +333,26 @@ EXTERN ExpState *	expWaitOnOne _ANSI_ARGS_((void));
 EXTERN void		expExpectVarsInit _ANSI_ARGS_((void));
 EXTERN int		expStateAnyIs _ANSI_ARGS_((ExpState *));
 EXTERN int		expDevttyIs _ANSI_ARGS_((ExpState *));
-EXTERN int		expStdinOutIs _ANSI_ARGS_((ExpState *));
+EXTERN int		expStdinoutIs _ANSI_ARGS_((ExpState *));
 EXTERN ExpState *	expStdinoutGet _ANSI_ARGS_((void));
 EXTERN ExpState *	expDevttyGet _ANSI_ARGS_((void));
 
 /* generic functions that really should be provided by Tcl */
+#if 0 /* Redefined as macros. */
 EXTERN int		expSizeGet _ANSI_ARGS_((ExpState *));
 EXTERN int		expSizeZero _ANSI_ARGS_((ExpState *));
+#else
+#define expSizeGet(esPtr)  ((esPtr)->input.use)
+#define expSizeZero(esPtr) (((esPtr)->input.use) == 0)
+#endif
+
+#define EXP_CMDINFO_CLOSE  "expect/cmdinfo/close"
+#define EXP_CMDINFO_RETURN "expect/cmdinfo/return"
+
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 78
+ * End:
+ */

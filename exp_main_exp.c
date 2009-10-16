@@ -7,10 +7,14 @@ dollars.  Therefore it is public domain.  However, the author and NIST
 would appreciate credit if this program or parts of it are used.
 */
 
+/* Don't use stubs since we are in the main application. */
+#undef USE_TCL_STUBS
+
 #include "expect_cf.h"
 #include <stdio.h>
 #include "tcl.h"
 #include "expect_tcl.h"
+#include <stdlib.h>
 
 int
 main(argc, argv)
@@ -24,12 +28,12 @@ char *argv[];
 	Tcl_FindExecutable(argv[0]);
 
 	if (Tcl_Init(interp) == TCL_ERROR) {
-	    fprintf(stderr,"Tcl_Init failed: %s\n",interp->result);
+	    fprintf(stderr,"Tcl_Init failed: %s\n",Tcl_GetStringResult (interp));
 	    (void) exit(1);
 	}
 
 	if (Expect_Init(interp) == TCL_ERROR) {
-	    fprintf(stderr,"Expect_Init failed: %s\n",interp->result);
+	    fprintf(stderr,"Expect_Init failed: %s\n",Tcl_GetStringResult (interp));
 	    (void) exit(1);
 	}
 

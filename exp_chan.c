@@ -1,5 +1,5 @@
 /* 
- * tclUnixChan.c
+ * exp_chan.c
  *
  *	Channel driver for Expect channels.
  *      Based on UNIX File channel from TclUnixChan.c
@@ -35,7 +35,9 @@
 #include "exp_prog.h"
 #include "exp_command.h"
 #include "exp_log.h"
+#include "tcldbg.h" /* Dbg_StdinMode */
 
+extern int		expSetBlockModeProc _ANSI_ARGS_((int fd, int mode));
 static int		ExpBlockModeProc _ANSI_ARGS_((ClientData instanceData,
 			    int mode));
 static int		ExpCloseProc _ANSI_ARGS_((ClientData instanceData,
@@ -56,28 +58,6 @@ static int		ExpGetHandleProc _ANSI_ARGS_((ClientData instanceData,
 
 Tcl_ChannelType expChannelType = {
     "exp",				/* Type name. */
-
-    /* Tcl_ChannelType was redefined in 8.3.2 but Tcl does not
-       advertise its patch level in a useful way so for simplicity,
-       assume 8.3 is a modern 8.3, i.e. 8.3.2
-    */
-
-#if (TCL_MAJOR_VERSION > 8) || ((TCL_MAJOR_VERSION == 8) && (TCL_MINOR_VERSION >= 3))
-    TCL_CHANNEL_VERSION_2,
-    ExpCloseProc,			/* Close proc. */
-    ExpInputProc,			/* Input proc. */
-    ExpOutputProc,			/* Output proc. */
-    NULL,				/* Seek proc. */
-    NULL,				/* Set option proc. */
-    NULL,				/* Get option proc. */
-    ExpWatchProc,			/* Initialize notifier. */
-    ExpGetHandleProc,			/* Get OS handles out of channel. */
-    NULL,				/* Close2 proc */
-    ExpBlockModeProc,			/* Set blocking/nonblocking mode.*/
-    NULL,				/* Flush proc. */
-    NULL,				/* Handle channel event proc. */
-#else
-    /* Expect channels are always non-blocking */
     ExpBlockModeProc,			/* Set blocking/nonblocking mode.*/
     ExpCloseProc,			/* Close proc. */
     ExpInputProc,			/* Input proc. */
@@ -88,7 +68,6 @@ Tcl_ChannelType expChannelType = {
     ExpWatchProc,			/* Initialize notifier. */
     ExpGetHandleProc,			/* Get OS handles out of channel. */
     NULL,				/* Close2 proc */
-#endif
 };
 
 typedef struct ThreadSpecificData {
@@ -131,12 +110,49 @@ ExpBlockModeProc(instanceData, mode)
 					 * TCL_MODE_NONBLOCKING. */
 {
     ExpState *esPtr = (ExpState *) instanceData;
+
+    if (esPtr->fdin == 0) {
+        /* Forward status to debugger. Required for FIONBIO systems,
+	 * which are unable to query the fd for its current state.
+	 */
+        Dbg_StdinMode (mode);
+    }
+
+    /* [Expect SF Bug 1108551] (July 7 2005)
+     * Exclude manipulation of the blocking status for stdin/stderr.
+     *
+     * This is handled by the Tcl core itself and we must absolutely
+     * not pull the rug out from under it. The standard setting to
+     * non-blocking will mess with the core which had them set to
+     * blocking, and makes all its decisions based on that assumption.
+     * Setting to non-blocking can cause hangs and crashes.
+     *
+     * Stdin is ok however, apparently.
+     * (Sep 9 2005) No, it is not.
+     */
+
+    if ((esPtr->fdin == 0) ||
+	(esPtr->fdin == 1) ||
+	(esPtr->fdin == 2)) {
+      return 0;
+    }
+
+    return expSetBlockModeProc (esPtr->fdin, mode);
+}
+
+int
+expSetBlockModeProc(fd, mode)
+    int fd;
+    int mode;				/* The mode to set. Can be one of
+					 * TCL_MODE_BLOCKING or
+					 * TCL_MODE_NONBLOCKING. */
+{
     int curStatus;
     /*printf("ExpBlockModeProc(%d)\n",mode);
-      printf("fdin = %d\n",esPtr->fdin);*/
+      printf("fdin = %d\n",fd);*/
 
 #ifndef USE_FIONBIO
-    curStatus = fcntl(esPtr->fdin, F_GETFL);
+    curStatus = fcntl(fd, F_GETFL);
     /*printf("curStatus = %d\n",curStatus);*/
     if (mode == TCL_MODE_BLOCKING) {
 	curStatus &= (~(O_NONBLOCK));
@@ -144,23 +160,22 @@ ExpBlockModeProc(instanceData, mode)
 	curStatus |= O_NONBLOCK;
     }
     /*printf("new curStatus %d\n",curStatus);*/
-    if (fcntl(esPtr->fdin, F_SETFL, curStatus) < 0) {
+    if (fcntl(fd, F_SETFL, curStatus) < 0) {
 	return errno;
     }
-    curStatus = fcntl(esPtr->fdin, F_GETFL);
+    curStatus = fcntl(fd, F_GETFL);
 #else /* USE_FIONBIO */
     if (mode == TCL_MODE_BLOCKING) {
 	curStatus = 0;
     } else {
 	curStatus = 1;
     }
-    if (ioctl(esPtr->fdin, (int) FIONBIO, &curStatus) < 0) {
+    if (ioctl(fd, (int) FIONBIO, &curStatus) < 0) {
 	return errno;
     }
 #endif /* !USE_FIONBIO */
     return 0;
 }
-
 /*
  *----------------------------------------------------------------------
  *
@@ -248,6 +263,9 @@ ExpOutputProc(instanceData, buf, toWrite, errorCodePtr)
     *errorCodePtr = 0;
 
     if (toWrite < 0) Tcl_Panic("ExpOutputProc: called with negative char count");
+    if (toWrite ==0) {
+        return 0;
+    }
 
     written = write(esPtr->fdout, buf, (size_t) toWrite);
     if (written == 0) {
@@ -307,7 +325,8 @@ ExpCloseProc(instanceData, interp)
     Tcl_DeleteFileHandler(esPtr->fdin);
 #endif /*0*/
 
-    Tcl_DecrRefCount(esPtr->buffer);
+    Tcl_Free((char*)esPtr->input.buffer);
+    Tcl_DecrRefCount (esPtr->input.newchars);
 
     /* Actually file descriptor should have been closed earlier. */
     /* So do nothing here */
@@ -428,25 +447,21 @@ expChannelCountGet()
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
     return tsdPtr->channelCount;
 }
-
+#if 0 /* Converted to macros */
 int
 expSizeGet(esPtr)
     ExpState *esPtr;
 {
-    int len;
-    Tcl_GetStringFromObj(esPtr->buffer,&len);
-    return len;
+    return esPtr->input.use;
 }
 
 int
 expSizeZero(esPtr)
     ExpState *esPtr;
 {
-    int len;
-    Tcl_GetStringFromObj(esPtr->buffer,&len);
-    return (len == 0);
+    return (esPtr->input.use == 0);
 }
-
+#endif
 /* return 0 for success or negative for failure */
 int
 expWriteChars(esPtr,buffer,lenBytes)
@@ -459,8 +474,35 @@ expWriteChars(esPtr,buffer,lenBytes)
   rc = Tcl_WriteChars(esPtr->channel,buffer,lenBytes);
   if ((rc == -1) && (errno == EAGAIN)) goto retry;
 
+  if (!exp_strict_write) {
+    /*
+     * 5.41 compatbility behaviour. Ignore any and all write errors
+     * the OS may have thrown.
+     */
+    return 0;
+  }
+
   /* just return 0 rather than positive byte counts */
   return ((rc > 0) ? 0 : rc);
+}
+
+int
+expWriteCharsUni(esPtr,buffer,lenChars)
+     ExpState *esPtr;
+     Tcl_UniChar *buffer;
+     int lenChars;
+{
+  int rc;
+  Tcl_DString ds;
+
+  Tcl_DStringInit (&ds);
+  Tcl_UniCharToUtfDString (buffer,lenChars,&ds);
+
+  rc = expWriteChars(esPtr,Tcl_DStringValue (&ds), Tcl_DStringLength (&ds));
+
+  Tcl_DStringFree (&ds);
+
+  return rc;
 }
 
 void
@@ -550,6 +592,9 @@ expWaitOnOne() {
 	    return esPtr;
 	}
     }
+    /* Should not reach this location. If it happens return a value
+     * causing an easy crash */
+    return NULL;
 }
 
 void
@@ -616,11 +661,13 @@ expCreateChannel(interp,fdin,fdout,pid)
     Tcl_SetChannelOption(interp,esPtr->channel,"-translation","lf");
 
     esPtr->pid = pid;
-    esPtr->msize = 0;
 
-    /* initialize a dummy buffer */
-    esPtr->buffer = Tcl_NewStringObj("",0);
-    Tcl_IncrRefCount(esPtr->buffer);
+    esPtr->input.max    = 1;
+    esPtr->input.use    = 0;
+    esPtr->input.buffer = (Tcl_UniChar*) Tcl_Alloc (sizeof (Tcl_UniChar));
+    esPtr->input.newchars = Tcl_NewObj();
+    Tcl_IncrRefCount (esPtr->input.newchars);
+
     esPtr->umsize = exp_default_match_max;
     /* this will reallocate object with an appropriate sized buffer */
     expAdjust(esPtr);
@@ -633,7 +680,7 @@ expCreateChannel(interp,fdin,fdout,pid)
     esPtr->key = expect_key++;
     esPtr->force_read = FALSE;
     esPtr->fg_armed = FALSE;
-    esPtr->channel_orig = 0;
+    esPtr->chan_orig = 0;
     esPtr->fd_slave = EXP_NOFD;
 #ifdef HAVE_PTYTRAP
     esPtr->slave_name = 0;

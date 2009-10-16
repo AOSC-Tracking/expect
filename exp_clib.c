@@ -78,7 +78,7 @@ would appreciate credit if this program or parts of it are used.
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id: exp_clib.c,v 5.30 2002/03/23 04:55:04 libes Exp $
+ * RCS: @(#) $Id: exp_clib.c,v 5.33 2009/07/14 18:21:14 andreas_kupries Exp $
  */
 
 #ifndef _STDLIB
@@ -166,7 +166,7 @@ extern unsigned long	strtoul _ANSI_ARGS_((CONST char *string,
  * *** 2. This in addition to changes to TclRegError makes the   ***
  * ***    code multi-thread safe.                                ***
  *
- * RCS: @(#) $Id: exp_clib.c,v 5.30 2002/03/23 04:55:04 libes Exp $
+ * RCS: @(#) $Id: exp_clib.c,v 5.33 2009/07/14 18:21:14 andreas_kupries Exp $
  */
 
 #if 0
@@ -399,8 +399,10 @@ char *exp;
 	rcstate->regnpar = 1;
 	rcstate->regcode = r->program;
 	regc(MAGIC, rcstate);
-	if (reg(0, &flags, rcstate) == NULL)
-		return(NULL);
+	if (reg(0, &flags, rcstate) == NULL) {
+	  ckfree ((char*) r);
+	  return(NULL);
+	}
 
 	/* Dig out information for optimizations. */
 	r->regstart = '\0';	/* Worst-case defaults. */
@@ -3006,20 +3008,20 @@ struct exp_case *ecases;
 
 		/*
 		 * check for timeout
-		 * we should timeout if either
-		 *   1) exp_timeout > remtime <= 0 (normal)
-		 *   2) exp_timeout == 0 and we have polled at least once
+ 		 * we should timeout if either
+ 		 *   1) exp_timeout > remtime <= 0 (normal)
+ 		 *   2) exp_timeout == 0 and we have polled at least once
 		 * 
 		 */
 		if (((exp_timeout > remtime) && (remtime <= 0)) ||
-		    ((exp_timeout == 0) && polled)) {
+ 		    ((exp_timeout == 0) && polled)) {
 			exp_debuglog("expect: timeout\r\n");
 			exp_match_end = exp_buffer;
 			return_normally(EXP_TIMEOUT);
 		}
 
-		/* remember that we have actually checked at least once */
-		polled = 1;
+ 		/* remember that we have actually checked at least once */
+ 		polled = 1;
 
 		cc = i_read(fd,fp,
 				exp_buffer_end,

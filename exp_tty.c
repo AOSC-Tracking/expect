@@ -36,6 +36,7 @@
 #include "exp_tty_in.h"
 #include "exp_command.h"
 #include "exp_log.h"
+#include "exp_win.h"
 
 static int is_raw = FALSE;
 static int is_noecho = FALSE;
@@ -49,21 +50,20 @@ int exp_stdout_is_tty;
 #define tty_cooked exp_tty_cooked
 
 int
-exp_israw()
+exp_israw(void)
 {
 	return is_raw;
 }
 
 int
-exp_isecho()
+exp_isecho(void)
 {
 	return !is_noecho;
 }
 
 /* if set == 1, set it to raw, else unset it */
 void
-exp_tty_raw(set)
-int set;
+exp_tty_raw(int set)
 {
 	if (set == 1) {
 		is_raw = TRUE;
@@ -94,8 +94,7 @@ int set;
 }
 	
 void
-exp_tty_echo(set)
-int set;
+exp_tty_echo(int set)
 {
 	if (set == 1) {
 		is_noecho = FALSE;
@@ -113,8 +112,7 @@ int set;
 }
 
 int
-exp_tty_set_simple(tty)
-exp_tty *tty;
+exp_tty_set_simple(exp_tty *tty)
 {
 #ifdef HAVE_TCSETATTR
 	return(tcsetattr(exp_dev_tty, TCSADRAIN,tty));
@@ -124,8 +122,7 @@ exp_tty *tty;
 }
 
 int
-exp_tty_get_simple(tty)
-exp_tty *tty;
+exp_tty_get_simple(exp_tty *tty)
 {
 #ifdef HAVE_TCSETATTR
 	return(tcgetattr(exp_dev_tty,         tty));
@@ -137,10 +134,11 @@ exp_tty *tty;
 /* returns 0 if nothing changed */
 /* if something changed, the out parameters are changed as well */
 int
-exp_tty_raw_noecho(interp,tty_old,was_raw,was_echo)
-Tcl_Interp *interp;
-exp_tty *tty_old;
-int *was_raw, *was_echo;
+exp_tty_raw_noecho(
+    Tcl_Interp *interp,
+    exp_tty *tty_old,
+    int *was_raw,
+    int *was_echo)
 {
 	if (exp_disconnected) return(0);
 	if (is_raw && is_noecho) return(0);
@@ -172,10 +170,11 @@ int *was_raw, *was_echo;
 /* returns 0 if nothing changed */
 /* if something changed, the out parameters are changed as well */
 int
-exp_tty_cooked_echo(interp,tty_old,was_raw,was_echo)
-Tcl_Interp *interp;
-exp_tty *tty_old;
-int *was_raw, *was_echo;
+exp_tty_cooked_echo(
+    Tcl_Interp *interp,
+    exp_tty *tty_old,
+    int *was_raw,
+    int *was_echo)
 {
 	if (exp_disconnected) return(0);
 	if (!is_raw && !is_noecho) return(0);
@@ -205,11 +204,11 @@ int *was_raw, *was_echo;
 }
 
 void
-exp_tty_set(interp,tty,raw,echo)
-Tcl_Interp *interp;
-exp_tty *tty;
-int raw;
-int echo;
+exp_tty_set(
+    Tcl_Interp *interp,
+    exp_tty *tty,
+    int raw,
+    int echo)
 {
 	if (exp_tty_set_simple(tty) == -1) {
 		expErrorLog("ioctl(set): %s\r\n",Tcl_PosixError(interp));
@@ -257,9 +256,9 @@ exp_init_stdio()
 
 /*ARGSUSED*/
 void
-exp_tty_break(interp,fd)
-Tcl_Interp *interp;
-int fd;
+exp_tty_break(
+    Tcl_Interp *interp,
+    int fd)
 {
 #ifdef POSIX
 	tcsendbreak(fd,0);
@@ -279,9 +278,9 @@ int fd;
 /* If len == 0, use strlen to compute it */
 /* NB: if terminal is not in raw mode, nothing is done. */
 char *
-exp_cook(s,len)
-char *s;
-int *len;	/* current and new length of s */
+exp_cook(
+    char *s,
+    int *len)	/* current and new length of s */
 {
 	static int destlen = 0;
 	static char *dest = 0;
@@ -313,17 +312,13 @@ int *len;	/* current and new length of s */
 	return(dest);
 }
 
-/* this stupidity because Tcl needs commands in writable space */
-static char exec_cmd[] = "exec";
-
 static int		/* returns TCL_whatever */
-exec_stty(interp,argc,argv,devtty)
-Tcl_Interp *interp;
-int argc;
-char **argv;
-int devtty;		/* if true, redirect to /dev/tty */
+exec_stty(
+    Tcl_Interp *interp,
+    int argc,
+    char **argv,
+    int devtty)		/* if true, redirect to /dev/tty */
 {
-	char **new_argv;
 	int i;
 	int rc;
 
@@ -371,11 +366,11 @@ int devtty;		/* if true, redirect to /dev/tty */
 
 /*ARGSUSED*/
 static int
-Exp_SttyCmd(clientData, interp, argc, argv)
-ClientData clientData;
-Tcl_Interp *interp;
-int argc;
-char **argv;
+Exp_SttyCmd(
+    ClientData clientData,
+    Tcl_Interp *interp,
+    int argc,
+    char **argv)
 {
 	/* redirection symbol is not counted as a stty arg in terms */
 	/* of recognition. */
@@ -386,7 +381,6 @@ char **argv;
 	int rc = TCL_OK;
 	int cooked = FALSE;
 	int was_raw, was_echo;
-
 
 	char **redirect;	/* location of "<" */
 	char *infile = 0;
@@ -423,35 +417,38 @@ char **argv;
 		was_raw = exp_israw();
 		was_echo = exp_isecho();
 
-		exp_ioctled_devtty = TRUE;
-
 		for (argv=argv0+1;*argv;argv++) {
 			if (streq(*argv,"raw") ||
 			    streq(*argv,"-cooked")) {
 				exp_tty_raw(1);
 				saw_known_stty_arg = TRUE;
 				no_args = FALSE;
+				exp_ioctled_devtty = TRUE;
 			} else if (streq(*argv,"-raw") ||
 				   streq(*argv,"cooked")) {
 				cooked = TRUE;
 				exp_tty_raw(-1);
 				saw_known_stty_arg = TRUE;
 				no_args = FALSE;
+				exp_ioctled_devtty = TRUE;
 			} else if (streq(*argv,"echo")) {
 				exp_tty_echo(1);
 				saw_known_stty_arg = TRUE;
 				no_args = FALSE;
+				exp_ioctled_devtty = TRUE;
 			} else if (streq(*argv,"-echo")) {
 				exp_tty_echo(-1);
 				saw_known_stty_arg = TRUE;
 				no_args = FALSE;
+				exp_ioctled_devtty = TRUE;
 			} else if (streq(*argv,"rows")) {
 				if (*(argv+1)) {
 					exp_win_rows_set(*(argv+1));
 					argv++;
 					no_args = FALSE;
+					exp_ioctled_devtty = TRUE;
 				} else {
-					exp_win_rows_get(interp->result);
+		    Tcl_SetResult (interp, exp_win_rows_get(), TCL_VOLATILE);
 					return TCL_OK;
 				}
 			} else if (streq(*argv,"columns")) {
@@ -459,8 +456,9 @@ char **argv;
 					exp_win_columns_set(*(argv+1));
 					argv++;
 					no_args = FALSE;
+					exp_ioctled_devtty = TRUE;
 				} else {
-					exp_win_columns_get(interp->result);
+		    Tcl_SetResult (interp, exp_win_columns_get(), TCL_VOLATILE);
 					return TCL_OK;
 				}
 			} else {
@@ -469,6 +467,10 @@ char **argv;
 		}
 		/* if any unknown args, let real stty try */
 		if (saw_unknown_stty_arg || no_args) {
+			if (saw_unknown_stty_arg) {
+			    exp_ioctled_devtty = TRUE;
+			}
+
 			/* let real stty try */
 			rc = exec_stty(interp,argc,argv0,1);
 
@@ -495,9 +497,11 @@ char **argv;
 
 		/* if no result, make a crude one */
 		if (0 == strcmp(Tcl_GetString(Tcl_GetObjResult(interp)),"")) {
-			sprintf(interp->result,"%sraw %secho",
-				(was_raw?"":"-"),
-				(was_echo?"":"-"));
+		    char buf [11];
+		    sprintf(buf,"%sraw %secho",
+			    (was_raw?"":"-"),
+			    (was_echo?"":"-"));
+		    Tcl_SetResult (interp, buf, TCL_VOLATILE);
 		}
 	} else {
 		/* a different tty */
@@ -513,7 +517,7 @@ char **argv;
 					argv++;
 					no_args = FALSE;
 				} else {
-					exp_win2_rows_get(fd,interp->result);
+		    Tcl_SetResult (interp, exp_win2_rows_get(fd), TCL_VOLATILE);
 					goto done;
 				}
 			} else if (streq(*argv,"columns")) {
@@ -522,7 +526,7 @@ char **argv;
 					argv++;
 					no_args = FALSE;
 				} else {
-					exp_win2_columns_get(fd,interp->result);
+		    Tcl_SetResult (interp, exp_win2_columns_get(fd), TCL_VOLATILE);
 					goto done;
 				}
 			} else if (streq(*argv,"<")) {
@@ -561,11 +565,11 @@ char **argv;
 
 /*ARGSUSED*/
 static int
-Exp_SystemCmd(clientData, interp, argc, argv)
-ClientData clientData;
-Tcl_Interp *interp;
-int argc;
-char **argv;
+Exp_SystemCmd(
+    ClientData clientData,
+    Tcl_Interp *interp,
+    int argc,
+    char **argv)
 {
 	int result = TCL_OK;
 	RETSIGTYPE (*old)();	/* save old sigalarm handler */
@@ -615,11 +619,13 @@ char **argv;
 
 		/* if unknown args, fall thru and let real stty have a go */
 		if (stty_args_recognized) {
+	    if (
 #ifdef HAVE_TCSETATTR
- 			if (tcsetattr(exp_dev_tty,TCSADRAIN, &tty_current) == -1) {
+		tcsetattr(exp_dev_tty,TCSADRAIN, &tty_current) == -1
 #else
-		        if (ioctl(exp_dev_tty, TCSETSW, &tty_current) == -1) {
+		ioctl(exp_dev_tty, TCSETSW, &tty_current) == -1
 #endif
+		) {
 			    if (exp_disconnected || (exp_dev_tty == -1) || !isatty(exp_dev_tty)) {
 				expErrorLog("system stty: impossible in this context\n");
 				expErrorLog("are you disconnected or in a batch, at, or cron script?");
@@ -629,9 +635,11 @@ char **argv;
 			    return(TCL_ERROR);
 			}
 			if (cmd_is_stty) {
-				sprintf(interp->result,"%sraw %secho",
-					(was_raw?"":"-"),
-					(was_echo?"":"-"));
+			    char buf [11];
+			    sprintf(buf,"%sraw %secho",
+				    (was_raw?"":"-"),
+				    (was_echo?"":"-"));
+			    Tcl_SetResult (interp, buf, TCL_VOLATILE);
 			}
 			return(TCL_OK);
 		}
@@ -668,11 +676,13 @@ char **argv;
 
 	if (!stty_args_recognized) {
 		/* find out what weird options user asked for */
+	if (
 #ifdef HAVE_TCSETATTR
-		if (tcgetattr(exp_dev_tty, &tty_current) == -1) {
+	    tcgetattr(exp_dev_tty, &tty_current) == -1
 #else
-	        if (ioctl(exp_dev_tty, TCGETS, &tty_current) == -1) {
+	    ioctl(exp_dev_tty, TCGETS, &tty_current) == -1
 #endif
+	    ) {
 			expErrorLog("ioctl(get): %s\r\n",Tcl_PosixError(interp));
 
 			/* SF #439042 -- Allow overide of "exit" by user / script
@@ -689,9 +699,11 @@ char **argv;
 	}
 
 	if (cmd_is_stty) {
-		sprintf(interp->result,"%sraw %secho",
-			(was_raw?"":"-"),
-			(was_echo?"":"-"));
+	    char buf [11];
+	    sprintf(buf,"%sraw %secho",
+		    (was_raw?"":"-"),
+		    (was_echo?"":"-"));
+	    Tcl_SetResult (interp, buf, TCL_VOLATILE);
 	}
 
 /* following macros stolen from Tcl's tclUnix.h file */
@@ -770,7 +782,7 @@ char **argv;
 	    }
 	}
 
-    if (abnormalExit && (*interp->result == 0)) {
+    if (abnormalExit && (Tcl_GetStringResult (interp)[0] == 0)) {
 	Tcl_AppendResult(interp, "child process exited abnormally",
 		(char *) NULL);
     }
@@ -785,8 +797,15 @@ cmd_data[]  = {
 {0}};
 
 void
-exp_init_tty_cmds(interp)
-struct Tcl_Interp *interp;
+exp_init_tty_cmds(struct Tcl_Interp *interp)
 {
 	exp_create_commands(interp,cmd_data);
 }
+
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 78
+ * End:
+ */

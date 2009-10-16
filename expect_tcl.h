@@ -12,6 +12,7 @@ would appreciate credit if this program or parts of it are used.
 #ifndef _EXPECT_TCL_H
 #define _EXPECT_TCL_H
 
+#include <stdio.h>
 #include "expect_comm.h"
 
 /*
@@ -28,6 +29,8 @@ EXTERN FILE *exp_cmdfile;
 EXTERN char *exp_cmdfilename;
 EXTERN int exp_getpid;	/* pid of Expect itself */
 EXTERN int exp_buffer_command_input;
+
+EXTERN int exp_strict_write;
 
 EXTERN int exp_tcl_debugger_available;
 

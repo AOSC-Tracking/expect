@@ -122,7 +122,7 @@ int code;
 	if (trap->interp) {
 		/* if trap requested original interp, use it */
 		sig_interp = trap->interp;
-	} else if (!interp) {
+	} else if (interp) {
 		/* else if another interp is available, use it */
 		sig_interp = interp;
 	} else {
@@ -439,7 +439,7 @@ int oldcode;
 	int newcode;
 	Tcl_Obj *eip;   /* errorInfo */
 	Tcl_Obj *ecp;	/* errorCode */
-	Tcl_Obj *irp;	/* interp->result */
+	Tcl_Obj *irp;	/* interp's result */
 
 	expDiagLogU("async event handler: Tcl_Eval(");
 	expDiagLogU(trap->action);
