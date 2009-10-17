@@ -12,15 +12,22 @@ CFLAGS = -Wall -g -D_BSD_SOURCE
 
 override_dh_auto_clean:
 	dh_auto_clean
-
 	rm -f *.a *.o
 	rm -rf shared
-
-	rm -f config.guess config.sub
+	rm -f expect_cf.h tcldbgcf.h
+	[ ! -f tclconfig/config.guess~ ] || mv -f tclconfig/config.guess~ tclconfig/config.guess
+	[ ! -f tclconfig/config.sub~ ] || mv -f tclconfig/config.sub~ tclconfig/config.sub
+	[ ! -f config.guess~ ] || mv -f config.guess~ config.guess
+	[ ! -f config.sub~ ] || mv -f config.sub~ config.sub
+	[ ! -f configure~ ] || mv -f configure~ configure
+	[ ! -f testsuite/Makefile ] || $(MAKE) -C testsuite distclean
 
 override_dh_auto_configure:
-	cp -f /usr/share/misc/config.guess config.guess
-	cp -f /usr/share/misc/config.sub config.sub
+	cp -f configure configure~
+	cp -fb /usr/share/misc/config.guess tclconfig/config.guess
+	cp -fb /usr/share/misc/config.sub tclconfig/config.sub
+	cp -fb /usr/share/misc/config.guess config.guess
+	cp -fb /usr/share/misc/config.sub config.sub
 
 	autoconf
 	#patch -Np1 -i debian/patches/static-names.diff

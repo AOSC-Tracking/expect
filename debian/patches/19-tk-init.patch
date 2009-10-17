@@ -4,7 +4,7 @@ Description: Fixes Tk intialization by calling Tk_Init instead of
 
 --- expect-5.44.1.14.orig/exp_main_tk.c
 +++ expect-5.44.1.14/exp_main_tk.c
-@@ -162,13 +162,7 @@
+@@ -162,13 +173,7 @@
   * the "argv" variable in Tk_Init.
   */
  
@@ -19,7 +19,7 @@ Description: Fixes Tk intialization by calling Tk_Init instead of
  
  /* for Expect */
  int my_rc = 1;
-@@ -181,21 +175,6 @@
+@@ -181,21 +186,6 @@
  int print_version = 0;
  
  static Tk_ArgvInfo argTable[] = {
@@ -50,7 +50,7 @@ Description: Fixes Tk intialization by calling Tk_Init instead of
      {(char *) NULL, TK_ARGV_END, (char *) NULL, (char *) NULL,
  	(char *) NULL}
  };
-@@ -243,11 +224,11 @@
+@@ -243,11 +235,11 @@
      Tcl_Interp *interp;		/* Interpreter to initialize. */
  {
      CONST char *p;
@@ -66,7 +66,7 @@ Description: Fixes Tk intialization by calling Tk_Init instead of
  
      /*
       * If there is an "argv" variable, get its value, extract out
-@@ -255,8 +236,7 @@
+@@ -255,8 +247,7 @@
       * the arguments that we used.
       */
  
@@ -76,7 +76,7 @@ Description: Fixes Tk intialization by calling Tk_Init instead of
      p = Tcl_GetVar2(interp, "argv", (char *) NULL, TCL_GLOBAL_ONLY);
      argv = NULL;
      if (p != NULL) {
-@@ -285,115 +265,57 @@
+@@ -285,115 +276,57 @@
  	    }
  	}
  

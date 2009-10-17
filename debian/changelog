@@ -1,8 +1,12 @@
-expect (5.44.1.14-2) UNRELEASED; urgency=low
+expect (5.44.1.14-2) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * Added buid conflicy with autoconf2.13 because autoconf 2.50 or newer is
+    required to process configure.in template.
+  * Fixed building with the current config.sub and config.guess from
+    autotools-dev package (closes: #551332).
+  * Fixed cleaning after build is done.
 
- -- Sergei Golovan <sgolovan@debian.org>  Sat, 17 Oct 2009 11:18:35 +0400
+ -- Sergei Golovan <sgolovan@debian.org>  Sat, 17 Oct 2009 16:55:29 +0400
 
 expect (5.44.1.14-1) unstable; urgency=low
 
