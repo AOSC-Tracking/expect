@@ -185,15 +185,6 @@ diff -Naurp expect.orig/exp_main_tk.c expect/exp_main_tk.c
  
  /*
   *----------------------------------------------------------------------
-@@ -387,7 +397,7 @@ Tk_Init2(interp)
-      * Invoke platform-specific initialization.
-      */
- 
--    code = TkpInit(interp, 0);
-+    code = TkpInit(interp);
- 
-     done:
-     if (argv != NULL) {
 diff -Naurp expect.orig/exp_trap.c expect/exp_trap.c
 --- expect.orig/exp_trap.c	2009-08-03 08:39:25.000000000 +0000
 +++ expect/exp_trap.c	2009-08-03 08:39:40.000000000 +0000
