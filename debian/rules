@@ -8,7 +8,7 @@ SHELL := sh -e
 %:
 	dh ${@} --with quilt
 
-CFLAGS = -Wall -g -D_BSD_SOURCE
+CFLAGS = -Wall -g -D_BSD_SOURCE -ansi -D_SVID_SOURCE -D_POSIX_SOURCE
 
 override_dh_auto_clean:
 	dh_auto_clean
@@ -39,7 +39,7 @@ override_dh_auto_configure:
 			     --with-tkinclude=/usr/include/tcl8.5/tk-private/generic \
 			     --enable-shared \
 			     --enable-threads \
-			     CFLAGS="$(CFLAGS) -D_BSD_SOURCE -ansi -D_SVID_SOURCE -D_POSIX_SOURCE -D_REENTRANT"
+			     CFLAGS="$(CFLAGS)"
 
 override_dh_auto_build:
 	$(MAKE) SONAME=libexpect.so.$(VERSION)

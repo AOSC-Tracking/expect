@@ -4,7 +4,27 @@ Description: Fixes Tk intialization by calling Tk_Init instead of
 
 --- expect-5.44.1.14.orig/exp_main_tk.c
 +++ expect-5.44.1.14/exp_main_tk.c
-@@ -162,13 +173,7 @@
+@@ -29,7 +29,7 @@
+  */
+ 
+ #ifndef lint
+-static char sccsid[] = "@(#) tkAppInit.c 1.19 95/12/23 17:09:24";
++/* static char sccsid[] = "@(#) tkAppInit.c 1.19 95/12/23 17:09:24"; */
+ #endif /* not lint */
+ 
+ /* Don't use stubs since we are in the main application. */
+@@ -162,24 +173,11 @@
+ 
+ 
+-
+-/*
+- * Count of number of main windows currently open in this process.
+- */
+-
+-static int numMainWindows;
+-
+ /*
+  * The variables and table below are used to parse arguments from
   * the "argv" variable in Tk_Init.
   */
  

@@ -43,28 +43,24 @@ diff -Naurp expect.orig/exp_clib.c expect/exp_clib.c
  #include <stdlib.h>		/* for malloc */
  #endif
  
-+#include "tcl.h"
++#include <tcl.h>
  #include "expect.h"
 +#include "exp_command.h"
  #define TclRegError exp_TclRegError
  
  /*
-@@ -1465,6 +1469,7 @@ TclGetRegError()
-  * end of regexp definitions and code
+@@ -1492,7 +1492,10 @@
+  *----------------------------------------------------------------------
   */
  
-+#if 0
- /*
-  * following stolen from tcl8.0.4/generic/tclPosixStr.c
-  */
-@@ -1921,6 +1926,7 @@ Tcl_ErrnoMsg(err)
- #endif
-     }
- }
+-static
++#ifdef Tcl_ErrnoMsg
++#undef Tcl_ErrnoMsg
 +#endif
- 
- /*
-  * end of excerpt from tcl8.0.X/generic/tclPosixStr.c
++
+ char *
+ Tcl_ErrnoMsg(err)
+     int err;			/* Error number (such as in errno variable). */
 diff -Naurp expect.orig/exp_command.h expect/exp_command.h
 --- expect.orig/exp_command.h	2009-08-03 08:39:25.000000000 +0000
 +++ expect/exp_command.h	2009-08-03 08:39:40.000000000 +0000
@@ -78,15 +74,6 @@ diff -Naurp expect.orig/exp_command.h expect/exp_command.h
  #ifdef HAVE_SYS_WAIT_H
    /* ISC doesn't def WNOHANG unless _POSIX_SOURCE is def'ed */
  # ifdef WNOHANG_REQUIRES_POSIX_SOURCE
-@@ -23,7 +26,7 @@ would appreciate credit if this program 
- # undef panic
- #endif
- 
--#include <tclPort.h>
-+#include "tclPort.h"
- 
- #define EXP_CHANNELNAMELEN (16 + TCL_INTEGER_SPACE)
- 
 @@ -100,11 +103,11 @@ typedef struct ExpState {
      char name[EXP_CHANNELNAMELEN+1]; /* expect and interact set variables
  				   to channel name, so for efficiency
@@ -160,11 +147,12 @@ diff -Naurp expect.orig/exp_main_tk.c expect/exp_main_tk.c
  #include <ctype.h>
 +#include <string.h>  /* strrchr(3) */
  
-+#include "tclInt.h"  /* Internal definitions for Tcl. */
-+#include "tcl.h"
++#include <tclInt.h>  /* Internal definitions for Tcl. */
++#include <tcl.h>
 +
- #include "tk.h"
-+#include "tkInt.h"
+-#include "tk.h"
++#include <tk.h>
++#include <tkInt.h>
  
  #include "expect_tcl.h"
  #include "tcldbg.h"
@@ -188,7 +176,15 @@ diff -Naurp expect.orig/exp_main_tk.c expect/exp_main_tk.c
 diff -Naurp expect.orig/exp_trap.c expect/exp_trap.c
 --- expect.orig/exp_trap.c	2009-08-03 08:39:25.000000000 +0000
 +++ expect/exp_trap.c	2009-08-03 08:39:40.000000000 +0000
-@@ -28,6 +28,7 @@ would appreciate credit if this program 
+@@ -11,6 +11,7 @@ would appreciate credit if this program
+ #include "expect_cf.h"
+ 
+ #include <stdio.h>
++#include <string.h>
+ #include <signal.h>
+ #include <sys/types.h>
+ 
+@@ -28,6 +29,7 @@ would appreciate credit if this program 
  #include "exp_prog.h"
  #include "exp_command.h"
  #include "exp_log.h"
@@ -215,7 +211,7 @@ diff -Naurp expect.orig/exp_tty_in.h expect/exp_tty_in.h
  
  #include "expect_cf.h"
 +#include "expect.h"
-+#include "tcl.h"
++#include <tcl.h>
  
  #ifdef __MACHTEN__
  #include "sys/types.h"
@@ -292,7 +288,7 @@ diff -Naurp expect.orig/pty_termios.c expect/pty_termios.c
  #endif
  
  #include "expect_cf.h"
-+#include "tcl.h"
++#include <tcl.h>
 +#include "expect.h"
 +#include "exp_tty_in.h"
 +#include "exp_int.h"  /* expErrnoMsg() prototype */
