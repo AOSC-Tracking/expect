@@ -1,4 +1,4 @@
-expect (5.44.1.14-3) UNRELEASED; urgency=low
+expect (5.44.1.14-3) unstable; urgency=low
 
   * Removed build dependencies which are also dependencies of tk8.5-dev.
   * Use locally defined function Tcl_ErrnoMsg in exp_clib.c because this
