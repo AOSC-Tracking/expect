@@ -1,13 +1,14 @@
 expect (5.44.1.14-3) unstable; urgency=low
 
-  * Removed build dependencies which are also dependencies of tk8.5-dev.
+  * Removed build dependencies which are also dependencies of tk8.5-dev
+    (since 8.5.7-2).
   * Use locally defined function Tcl_ErrnoMsg in exp_clib.c because this
     part of the library is supposed to be used without loading into a Tcl
     interpreter, which isn't possible if expect is build with Tcl stubs
     (closes: #552685).
   * Removed unneeded patches from debian/patches, cleaned up other ones.
 
- -- Sergei Golovan <sgolovan@debian.org>  Fri, 23 Oct 2009 12:33:16 +0400
+ -- Sergei Golovan <sgolovan@debian.org>  Tue, 03 Nov 2009 21:21:56 +0300
 
 expect (5.44.1.14-2) unstable; urgency=low
 

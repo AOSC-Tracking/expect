@@ -2,8 +2,8 @@ Source: expect
 Section: interpreters
 Priority: optional
 Maintainer: Sergei Golovan <sgolovan@debian.org>
-Build-Depends:
- debhelper (>= 7.0.50~), quilt (>=0.46-7), autotools-dev, autoconf, tcl8.5-dev, tk8.5-dev
+Build-Depends: debhelper (>= 7.0.50~), quilt (>=0.46-7), autotools-dev, autoconf,
+ tcl8.5-dev, tk8.5-dev (>= 8.5.7-2)
 Build-Conflicts: autoconf2.13
 Standards-Version: 3.8.3
 Homepage: http://sourceforge.net/projects/expect/
