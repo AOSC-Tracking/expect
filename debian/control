@@ -39,6 +39,7 @@ Package: expect-dev
 Section: devel
 Architecture: any
 Depends: ${misc:Depends}, expect (= ${binary:Version}), tcl8.5-dev
+Replaces: expect (<< 5.44.1.14)
 Recommends: expectk (= ${binary:Version}), tk8.5-dev
 Description: A program that can automate interactive applications (development)
  Expect is a tool for automating interactive applications according to a script.

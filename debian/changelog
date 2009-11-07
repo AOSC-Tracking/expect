@@ -1,8 +1,9 @@
-expect (5.44.1.14-4) UNRELEASED; urgency=low
+expect (5.44.1.14-4) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * Added replaces field to expect-dev binary package because libexpect(3)
+    manpage was moved from expect to expect-dev package (closes: #554947).
 
- -- Sergei Golovan <sgolovan@debian.org>  Tue, 03 Nov 2009 21:28:04 +0300
+ -- Sergei Golovan <sgolovan@debian.org>  Sat, 07 Nov 2009 15:53:09 +0300
 
 expect (5.44.1.14-3) unstable; urgency=low
 
