@@ -1,3 +1,9 @@
+expect (5.44.1.14-6) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Sergei Golovan <sgolovan@debian.org>  Wed, 18 Nov 2009 22:54:44 +0300
+
 expect (5.44.1.14-5) unstable; urgency=low
 
   * Fixed sourcing rc flies by expectk (closes: #555746).
