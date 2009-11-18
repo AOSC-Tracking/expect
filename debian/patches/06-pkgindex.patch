@@ -1,8 +1,10 @@
-Author: Michael A. Cleverly <michael@cleverly.com>
-Modified by Sergei Golovan <sgolovan@debian.org>
+Author: Michael A. Cleverly <michael@cleverly.com>, Sergei Golovan <sgolovan@debian.org>
 Description:
  Fixes stupid typo in pkgIndex.in (Closes: #186179).
  Adjusted for new soname (Closes: #381052).
+ Replaced [package require Expect] by direct loading libexpect library in all tests
+ because package management can't load the library from its build location.
+Last-Modified: 2009-11-18
 
 --- expect.orig/Makefile.in
 +++ expect/Makefile.in
@@ -23,3 +25,80 @@ Description:
  
 -package ifneeded Expect @EXP_VERSION_FULL@ [list load [file join $dir .. @EXP_SHARED_LIB_FILE@]]
 +package ifneeded Expect @EXP_VERSION_FULL@ [list load [file join @prefix@ lib libexpect.so.@PACKAGE_VERSION@]]
+--- expect.orig/tests/cat.test
++++ expect/tests/cat.test
+@@ -9,7 +9,7 @@
+     # do this in a way that is backward compatible for Tcl 8.3
+     namespace import ::tcltest::test ::tcltest::cleanupTests
+ }
+-package require Expect
++load [lindex [glob libexpect*.so] 0]
+ 
+ #exp_internal -f /dev/ttyp5 0
+ 
+--- expect.orig/tests/expect.test
++++ expect/tests/expect.test
+@@ -9,7 +9,7 @@
+     # do this in a way that is backward compatible for Tcl 8.3
+     namespace import ::tcltest::test ::tcltest::cleanupTests
+ }
+-package require Expect
++load [lindex [glob libexpect*.so] 0]
+ 
+ catch {unset x}
+ 
+--- expect.orig/tests/logfile.test
++++ expect/tests/logfile.test
+@@ -9,7 +9,7 @@
+     # do this in a way that is backward compatible for Tcl 8.3
+     namespace import ::tcltest::test ::tcltest::cleanupTests
+ }
+-package require Expect
++load [lindex [glob libexpect*.so] 0]
+ 
+ test logfile-1.1 {basic logfile} {
+     set filename /tmp/logfile.[pid]
+--- expect.orig/tests/pid.test
++++ expect/tests/pid.test
+@@ -9,7 +9,7 @@
+     # do this in a way that is backward compatible for Tcl 8.3
+     namespace import ::tcltest::test ::tcltest::cleanupTests
+ }
+-package require Expect
++load [lindex [glob libexpect*.so] 0]
+ 
+ catch {unset x}
+ 
+--- expect.orig/tests/send.test
++++ expect/tests/send.test
+@@ -9,7 +9,7 @@
+     # do this in a way that is backward compatible for Tcl 8.3
+     namespace import ::tcltest::test ::tcltest::cleanupTests
+ }
+-package require Expect
++load [lindex [glob libexpect*.so] 0]
+ 
+ log_user 0
+ 
+--- expect.orig/tests/spawn.test
++++ expect/tests/spawn.test
+@@ -9,7 +9,7 @@
+     # do this in a way that is backward compatible for Tcl 8.3
+     namespace import ::tcltest::test ::tcltest::cleanupTests
+ }
+-package require Expect
++load [lindex [glob libexpect*.so] 0]
+ 
+ log_user 0
+ 
+--- expect.orig/tests/stty.test
++++ expect/tests/stty.test
+@@ -9,7 +9,7 @@
+     # do this in a way that is backward compatible for Tcl 8.3
+     namespace import ::tcltest::test ::tcltest::cleanupTests
+ }
+-package require Expect
++load [lindex [glob libexpect*.so] 0]
+ 
+ #exp_internal -f /dev/ttyp5 0
+ 

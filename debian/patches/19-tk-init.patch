@@ -1,6 +1,8 @@
 Author: Sergei Golovan <sgolovan@debian.org>
-Description: Fixes Tk intialization by calling Tk_Init instead of
-	     using copy&pasted Tk_Init from older Tk.
+Description: Fixes Tk intialization by calling Tk_Init instead of using
+ copied&pasted Tk_Init from older Tk.
+Bug: https://sourceforge.net/tracker/?func=detail&aid=2585764&group_id=13179&atid=113179
+Last-Update: 2009-11-12
 
 --- expect-5.44.1.14.orig/exp_main_tk.c
 +++ expect-5.44.1.14/exp_main_tk.c
@@ -38,7 +40,7 @@ Description: Fixes Tk intialization by calling Tk_Init instead of
 +static int rest;
  
  /* for Expect */
- int my_rc = 1;
+ static int optcmd_eval();
 @@ -181,21 +186,6 @@
  int print_version = 0;
  

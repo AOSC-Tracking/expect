@@ -1,8 +1,11 @@
-expect (5.44.1.14-5) UNRELEASED; urgency=low
+expect (5.44.1.14-5) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * Fixed sourcing rc flies by expectk (closes: #555746).
+  * Removed another unnecessary patch.
+  * Adapted expect test suite to the changes in pkgIndex.tcl which can't load
+    Expect package if it isn't installed into /usr/lib.
 
- -- Sergei Golovan <sgolovan@debian.org>  Sat, 07 Nov 2009 16:00:50 +0300
+ -- Sergei Golovan <sgolovan@debian.org>  Wed, 18 Nov 2009 11:48:23 +0300
 
 expect (5.44.1.14-4) unstable; urgency=low
 
