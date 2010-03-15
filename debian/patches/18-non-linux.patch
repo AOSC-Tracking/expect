@@ -3,8 +3,8 @@ Description: Fixes build for non-linux Debian architectures and removes
 	     rpath definition because it's useless as the library is
 	     installed into /usr/lib
 
---- expect.orig/tclconfig/tcl.m4
-+++ expect/tclconfig/tcl.m4
+--- expect-5.44.1.15.orig/tclconfig/tcl.m4
++++ expect-5.44.1.15/tclconfig/tcl.m4
 @@ -1436,7 +1436,7 @@
  	        fi
  	    fi

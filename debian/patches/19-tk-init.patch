@@ -4,8 +4,8 @@ Description: Fixes Tk intialization by calling Tk_Init instead of using
 Bug: https://sourceforge.net/tracker/?func=detail&aid=2585764&group_id=13179&atid=113179
 Last-Update: 2009-11-12
 
---- expect-5.44.1.14.orig/exp_main_tk.c
-+++ expect-5.44.1.14/exp_main_tk.c
+--- expect-5.44.1.15.orig/exp_main_tk.c
++++ expect-5.44.1.15/exp_main_tk.c
 @@ -29,7 +29,7 @@
   */
  
@@ -15,7 +15,8 @@ Last-Update: 2009-11-12
  #endif /* not lint */
  
  /* Don't use stubs since we are in the main application. */
-@@ -162,24 +173,11 @@
+@@ -166,25 +166,12 @@
+ 
  
  
 -
@@ -41,7 +42,7 @@ Last-Update: 2009-11-12
  
  /* for Expect */
  static int optcmd_eval();
-@@ -181,21 +186,6 @@
+@@ -195,21 +182,6 @@
  int print_version = 0;
  
  static Tk_ArgvInfo argTable[] = {
@@ -63,7 +64,7 @@ Last-Update: 2009-11-12
      {"-command", TK_ARGV_GENFUNC, (char *) optcmd_eval, (char *)0,
  	"Command(s) to execute immediately"},
      {"-diag", TK_ARGV_CONSTANT, (char *) optcmd_diagToStderr, (char *)0,
-@@ -210,6 +189,8 @@
+@@ -224,6 +196,8 @@
      {"-Debug", TK_ARGV_GENFUNC, (char *) optcmd_debug, (char *)0, 
  	"Enable debugger"},
  #endif
@@ -72,7 +73,7 @@ Last-Update: 2009-11-12
      {(char *) NULL, TK_ARGV_END, (char *) NULL, (char *) NULL,
  	(char *) NULL}
  };
-@@ -243,11 +235,11 @@
+@@ -257,11 +231,11 @@
      Tcl_Interp *interp;		/* Interpreter to initialize. */
  {
      CONST char *p;
@@ -88,7 +89,7 @@ Last-Update: 2009-11-12
  
      /*
       * If there is an "argv" variable, get its value, extract out
-@@ -255,8 +247,7 @@
+@@ -269,8 +243,7 @@
       * the arguments that we used.
       */
  
@@ -98,7 +99,7 @@ Last-Update: 2009-11-12
      p = Tcl_GetVar2(interp, "argv", (char *) NULL, TCL_GLOBAL_ONLY);
      argv = NULL;
      if (p != NULL) {
-@@ -285,115 +276,57 @@
+@@ -299,115 +272,57 @@
  	    }
  	}
  

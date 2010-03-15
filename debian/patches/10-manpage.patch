@@ -1,10 +1,9 @@
 Author: n/a
 Description: Fixes sample expect shebang and excapes dashes.
 
-diff -Naurp expect.orig/expect.man expect/expect.man
---- expect.orig/expect.man	2009-08-03 06:58:30.000000000 +0000
-+++ expect/expect.man	2009-08-03 08:37:28.000000000 +0000
-@@ -108,11 +108,11 @@ for a list of commands to execute.
+--- expect-5.44.1.15.orig/expect.man
++++ expect-5.44.1.15/expect.man
+@@ -108,11 +108,11 @@
  may also be invoked implicitly on systems which support the #! notation
  by marking the script executable, and making the first line in your script:
  
@@ -18,7 +17,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  
  The
  .B \-c
-@@ -173,7 +173,8 @@ way, use the
+@@ -173,7 +173,8 @@
  .B \-b
  flag.
  (When using Expectk, this option is specified as
@@ -28,7 +27,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  .PP
  If the string "\-" is supplied as a filename, standard input is read instead.
  (Use "./\-" to read from a file actually named "\-".)
-@@ -207,7 +208,7 @@ interpretation by Expect.  For example, 
+@@ -207,7 +208,7 @@
  original arguments (including the script name) in the variable
  .IR argv .
  
@@ -37,7 +36,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  
  Note that the usual getopt(3) and execve(2) conventions must be observed
  when adding arguments to the #! line.
-@@ -291,7 +292,7 @@ command within the
+@@ -291,7 +292,7 @@
  program.)
  .I
  .TP 6
@@ -46,7 +45,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  closes the connection to the current process.
  Most interactive programs will detect EOF on their stdin and exit;
  thus
-@@ -320,7 +321,7 @@ use the value 0.  A non-zero integer val
+@@ -320,7 +321,7 @@
  
  The 
  .B \-slave
@@ -55,7 +54,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  When the connection is closed, the slave is automatically closed as
  well if still open.
  
-@@ -337,7 +338,7 @@ See
+@@ -337,7 +338,7 @@
  .B wait
  below for more info.
  .TP
@@ -64,7 +63,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  controls a Tcl debugger allowing you to step through statements, set
  breakpoints, etc.
  
-@@ -355,7 +356,7 @@ Tcl statement.
+@@ -355,7 +356,7 @@
  The
  .B debug
  command does not change any traps.  Compare this to starting Expect with the 
@@ -73,7 +72,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  flag (see above).
  
  See the README file or SEE ALSO (below)
-@@ -385,7 +386,7 @@ command which demonstrates how to turn o
+@@ -385,7 +386,7 @@
  .nf
  
      send_user "password?\\ "
@@ -82,7 +81,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
      for {} 1 {} {
          if {[fork]!=0} {sleep 3600;continue}
          disconnect
-@@ -452,7 +453,7 @@ Spawned processes that continue to run w
+@@ -452,7 +453,7 @@
  .B exit
  is implicitly executed if the end of the script is reached.
  .TP
@@ -91,7 +90,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  The command
  .B exp_continue
  allows
-@@ -462,7 +463,7 @@ executing rather than returning as it no
+@@ -462,7 +463,7 @@
  default
  .B exp_continue
  resets the timeout timer. The
@@ -100,7 +99,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  flag prevents timer from being restarted. (See
  .B expect
  for more information.)
-@@ -625,8 +626,8 @@ flag may may
+@@ -625,8 +626,8 @@
  be used to protect patterns that might otherwise match
  .B expect
  flags from doing so.
@@ -111,7 +110,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  
  .IP
  For example, the following fragment looks for a successful login.
-@@ -733,7 +734,7 @@ Up to 9 regexp substring matches are sav
+@@ -733,7 +734,7 @@
  through
  .IR expect_out(9,string) .
  If the
@@ -120,7 +119,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  flag is used before a pattern,
  the starting and ending indices (in a form suitable for
  .BR lrange )
-@@ -780,7 +781,7 @@ is as if the following statements had ex
+@@ -780,7 +781,7 @@
      set expect_out(buffer) abbbcabkkkk
  
  .fi
@@ -129,7 +128,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  flush the output buffer without reading any more output from the
  process.
  .IP
-@@ -788,7 +789,7 @@ Normally, the matched output is discarde
+@@ -788,7 +789,7 @@
  This may be prevented by prefixing a pattern with the
  .B \-notransfer
  flag.  This flag is especially useful in experimenting (and can be
@@ -138,7 +137,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  
  The spawn id associated with the matching output (or eof or
  full_buffer) is stored in
-@@ -872,9 +873,9 @@ statement (to look for the prompt again)
+@@ -872,9 +873,9 @@
  
      expect {
          Password: {
@@ -150,7 +149,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
              send_user "\\n"
              send "$expect_out(1,string)\\r"
              stty echo
-@@ -889,7 +890,7 @@ statement (to look for the prompt again)
+@@ -889,7 +890,7 @@
              send_user \\
                  "connection to host failed: $expect_out(buffer)"
              exit
@@ -159,7 +158,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
      }
  
  .fi
-@@ -1021,14 +1022,14 @@ to return the current specifications of 
+@@ -1021,14 +1022,14 @@
  By default, it reports on the current spawn id.  An optional spawn id specification may be given for information on that spawn id.  For example
  .nf
  
@@ -177,7 +176,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  
  The output of the \-info flag can be reused as the argument to expect_before.
  .TP
-@@ -1121,7 +1122,7 @@ interpreter runs interactively.
+@@ -1121,7 +1122,7 @@
  .ta \w'    interact 'u +\w'$CTRLZ  'u +\w'{'u
      set CTRLZ \\032
      interact {
@@ -186,7 +185,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
          \\001   {send_user "you typed a control\-A\\n";
                  send "\\001"
                 }
-@@ -1150,8 +1151,8 @@ command uses glob-style patterns by defa
+@@ -1150,8 +1151,8 @@
  flag may be used to protect patterns that might otherwise match
  .B interact
  flags from doing so.
@@ -197,7 +196,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  
  The
  .B \-re
-@@ -1197,7 +1198,7 @@ not typed anything for an hour but who s
+@@ -1197,7 +1198,7 @@
  messages:
  .nf
  
@@ -206,7 +205,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
          $spawn_id 
  
  .fi
-@@ -1296,9 +1297,9 @@ the result anyway.
+@@ -1296,9 +1297,9 @@
  .nf
  
      interact {
@@ -219,7 +218,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
      }
  
  .fi
-@@ -1314,11 +1315,11 @@ logs the rest of the line.
+@@ -1314,11 +1315,11 @@
  .nf
  
      proc lognumber {} {
@@ -233,7 +232,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  
  .fi
  .IP
-@@ -1389,7 +1390,7 @@ flag in the
+@@ -1389,7 +1390,7 @@
  command, except that any_spawn_id is not meaningful in
  .BR interact .)
  All following flags and
@@ -242,7 +241,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  If no
  .B \-input
  appears,
-@@ -1427,7 +1428,7 @@ flags are used.  A \-i flag implies a \-
+@@ -1427,7 +1428,7 @@
  It is possible to change the processes that are being interacted with
  by using indirect spawn ids.  (Indirect spawn ids are described in the
  section on the expect command.)  Indirect spawn ids may be specified
@@ -251,7 +250,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  .TP
  .B interpreter " [args]"
  causes the user to be interactively prompted for
-@@ -1513,18 +1514,18 @@ To truncate files, use the
+@@ -1513,18 +1514,18 @@
  flag.
  
  The
@@ -273,7 +272,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  flag causes log_user to return a description of the
  most recent non-info arguments given.
  .TP
-@@ -1645,7 +1646,7 @@ flag forces the next argument to be inte
+@@ -1645,7 +1646,7 @@
  Any string can be preceded by "\-\-" whether or not it actually looks
  like a flag.  This provides a reliable mechanism to specify variable strings
  without being tripped up by those that accidentally look like flags.
@@ -282,7 +281,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  
  The
  .B \-i
-@@ -1669,7 +1670,7 @@ to indicate how many nulls to send.
+@@ -1669,7 +1670,7 @@
  The
  .B \-break
  flag generates a break condition.  This only makes sense if the spawn
@@ -291,7 +290,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  spawned a process such as tip, you should use tip's convention for
  generating a break.
  
-@@ -1772,7 +1773,7 @@ is like
+@@ -1772,7 +1773,7 @@
  except that the output is sent to stderr rather than the current
  process.
  .TP
@@ -300,7 +299,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  is like
  .BR send ,
  except that the string is only sent to the log file (see
-@@ -1949,7 +1950,7 @@ to indicate there is no associated proce
+@@ -1949,7 +1950,7 @@
  The variable
  .I spawn_out(slave,fd)
  is set to a file identifier corresponding to the pty slave.
@@ -309,7 +308,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  
  The
  .B \-ignore
-@@ -1976,7 +1977,7 @@ but none below that.
+@@ -1976,7 +1977,7 @@
  .fi
  
  The
@@ -318,7 +317,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  flag causes strace to return a description of the
  most recent non-info arguments given.
  .TP
-@@ -2016,7 +2017,7 @@ scripts to avoid embedding passwords in 
+@@ -2016,7 +2017,7 @@
  
      stty \-echo
      send_user "Password: "
@@ -327,7 +326,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
      set password $expect_out(1,string)
      stty echo
  
-@@ -2151,7 +2152,7 @@ by default when Expect starts.
+@@ -2151,7 +2152,7 @@
      trap exit {SIGINT SIGTERM}
  
  .fi
@@ -336,7 +335,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  to start the interactive debugger.  This is due to the following trap:
  .nf
  
-@@ -2192,9 +2193,9 @@ the current process if none is named) te
+@@ -2192,9 +2193,9 @@
  normally returns a list of four integers.
  The first integer is the pid of the process that was waited upon.
  The second integer is the corresponding spawn id.
@@ -348,7 +347,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  the value of errno set by the operating system.  The global variable
  errorCode is also set.
  
-@@ -2210,7 +2211,7 @@ The
+@@ -2210,7 +2211,7 @@
  flag declares the process to wait corresponding to the named spawn_id
  (NOT the process id).
  Inside a SIGCHLD handler,
@@ -357,7 +356,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  
  The
  .B \-nowait
-@@ -2221,7 +2222,7 @@ disappear without the need for an explic
+@@ -2221,7 +2222,7 @@
  The
  .B wait
  command may also be used wait for a forked process using the arguments
@@ -366,7 +365,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  executed at any time.  There is no control over which process is
  reaped.  However, the return value can be checked for the process id.
  
-@@ -2372,7 +2373,7 @@ be set to something!  The following prob
+@@ -2372,7 +2373,7 @@
  .nf
  
      set env(SHELL) /bin/sh
@@ -375,7 +374,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  
  .fi
  
-@@ -2425,7 +2426,7 @@ discards the return codes from async eve
+@@ -2425,7 +2426,7 @@
  to set a flag in the trap code.  Then check the flag immediately after
  the command (i.e., sleep).
  
@@ -384,7 +383,7 @@ diff -Naurp expect.orig/expect.man expect/expect.man
  concept of timeouts in general.
  
  .SH "EXPECT HINTS"
-@@ -2447,7 +2448,7 @@ can be used.  If EXPECT_PROMPT doesn't e
+@@ -2447,7 +2448,7 @@
      set prompt "(%|#|\\\\$) $"          ;# default prompt
      catch {set prompt $env(EXPECT_PROMPT)}
  

@@ -2,10 +2,9 @@ Author: Russell Coker <russell@coker.com.au>
 Description:
  Fixes file handle 3 to be left open when running programs (Closes: #166677).
 
-diff -Naurp expect.orig/exp_clib.c expect/exp_clib.c
---- expect.orig/exp_clib.c	2009-08-03 06:58:30.000000000 +0000
-+++ expect/exp_clib.c	2009-08-03 08:36:54.000000000 +0000
-@@ -2502,6 +2502,7 @@ when trapping, see below in child half o
+--- expect-5.44.1.15.orig/exp_clib.c
++++ expect-5.44.1.15/exp_clib.c
+@@ -2502,6 +2502,7 @@
  
  	/* save error fd while we're setting up new one */
  	errorfd = fcntl(2,F_DUPFD,3);
@@ -13,10 +12,9 @@ diff -Naurp expect.orig/exp_clib.c expect/exp_clib.c
  	/* and here is the macro to restore it */
  #define restore_error_fd {close(2);fcntl(errorfd,F_DUPFD,2);}
  
-diff -Naurp expect.orig/exp_command.c expect/exp_command.c
---- expect.orig/exp_command.c	2009-08-03 06:58:30.000000000 +0000
-+++ expect/exp_command.c	2009-08-03 08:36:54.000000000 +0000
-@@ -1162,6 +1162,7 @@ when trapping, see below in child half o
+--- expect-5.44.1.15.orig/exp_command.c
++++ expect-5.44.1.15/exp_command.c
+@@ -1162,6 +1162,7 @@
  
      /* save error fd while we're setting up new one */
      errorfd = fcntl(2,F_DUPFD,3);

@@ -6,8 +6,8 @@ Description:
  because package management can't load the library from its build location.
 Last-Modified: 2009-11-18
 
---- expect.orig/Makefile.in
-+++ expect/Makefile.in
+--- expect-5.44.1.15.orig/Makefile.in
++++ expect-5.44.1.15/Makefile.in
 @@ -331,7 +331,7 @@
  
  pkgIndex.tcl-hand:
@@ -17,16 +17,16 @@ Last-Modified: 2009-11-18
  	) > pkgIndex.tcl
  
  #========================================================================
---- expect.orig/pkgIndex.in
-+++ expect/pkgIndex.in
+--- expect-5.44.1.15.orig/pkgIndex.in
++++ expect-5.44.1.15/pkgIndex.in
 @@ -7,4 +7,4 @@
  # script is sourced, the variable $dir must contain the
  # full path name of this file's directory.
  
 -package ifneeded Expect @EXP_VERSION_FULL@ [list load [file join $dir .. @EXP_SHARED_LIB_FILE@]]
 +package ifneeded Expect @EXP_VERSION_FULL@ [list load [file join @prefix@ lib libexpect.so.@PACKAGE_VERSION@]]
---- expect.orig/tests/cat.test
-+++ expect/tests/cat.test
+--- expect-5.44.1.15.orig/tests/cat.test
++++ expect-5.44.1.15/tests/cat.test
 @@ -9,7 +9,7 @@
      # do this in a way that is backward compatible for Tcl 8.3
      namespace import ::tcltest::test ::tcltest::cleanupTests
@@ -36,8 +36,8 @@ Last-Modified: 2009-11-18
  
  #exp_internal -f /dev/ttyp5 0
  
---- expect.orig/tests/expect.test
-+++ expect/tests/expect.test
+--- expect-5.44.1.15.orig/tests/expect.test
++++ expect-5.44.1.15/tests/expect.test
 @@ -9,7 +9,7 @@
      # do this in a way that is backward compatible for Tcl 8.3
      namespace import ::tcltest::test ::tcltest::cleanupTests
@@ -47,8 +47,8 @@ Last-Modified: 2009-11-18
  
  catch {unset x}
  
---- expect.orig/tests/logfile.test
-+++ expect/tests/logfile.test
+--- expect-5.44.1.15.orig/tests/logfile.test
++++ expect-5.44.1.15/tests/logfile.test
 @@ -9,7 +9,7 @@
      # do this in a way that is backward compatible for Tcl 8.3
      namespace import ::tcltest::test ::tcltest::cleanupTests
@@ -58,8 +58,8 @@ Last-Modified: 2009-11-18
  
  test logfile-1.1 {basic logfile} {
      set filename /tmp/logfile.[pid]
---- expect.orig/tests/pid.test
-+++ expect/tests/pid.test
+--- expect-5.44.1.15.orig/tests/pid.test
++++ expect-5.44.1.15/tests/pid.test
 @@ -9,7 +9,7 @@
      # do this in a way that is backward compatible for Tcl 8.3
      namespace import ::tcltest::test ::tcltest::cleanupTests
@@ -69,8 +69,8 @@ Last-Modified: 2009-11-18
  
  catch {unset x}
  
---- expect.orig/tests/send.test
-+++ expect/tests/send.test
+--- expect-5.44.1.15.orig/tests/send.test
++++ expect-5.44.1.15/tests/send.test
 @@ -9,7 +9,7 @@
      # do this in a way that is backward compatible for Tcl 8.3
      namespace import ::tcltest::test ::tcltest::cleanupTests
@@ -80,8 +80,8 @@ Last-Modified: 2009-11-18
  
  log_user 0
  
---- expect.orig/tests/spawn.test
-+++ expect/tests/spawn.test
+--- expect-5.44.1.15.orig/tests/spawn.test
++++ expect-5.44.1.15/tests/spawn.test
 @@ -9,7 +9,7 @@
      # do this in a way that is backward compatible for Tcl 8.3
      namespace import ::tcltest::test ::tcltest::cleanupTests
@@ -91,8 +91,8 @@ Last-Modified: 2009-11-18
  
  log_user 0
  
---- expect.orig/tests/stty.test
-+++ expect/tests/stty.test
+--- expect-5.44.1.15.orig/tests/stty.test
++++ expect-5.44.1.15/tests/stty.test
 @@ -9,7 +9,7 @@
      # do this in a way that is backward compatible for Tcl 8.3
      namespace import ::tcltest::test ::tcltest::cleanupTests

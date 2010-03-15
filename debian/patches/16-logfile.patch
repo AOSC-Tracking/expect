@@ -1,10 +1,9 @@
 Author: n/a
 Description: Corrects permissions when accessing logfiles.
 
-diff -Naurp expect.orig/exp_log.c expect/exp_log.c
---- expect.orig/exp_log.c	2009-08-03 06:58:30.000000000 +0000
-+++ expect/exp_log.c	2009-08-03 09:12:40.000000000 +0000
-@@ -499,7 +499,7 @@ expLogChannelOpen(interp,filename,append
+--- expect-5.44.1.15.orig/exp_log.c
++++ expect-5.44.1.15/exp_log.c
+@@ -499,7 +499,7 @@
  	Tcl_DStringAppend(&tsdPtr->logFilename,filename,-1);
      }
  

@@ -1,7 +1,6 @@
 #!/usr/bin/make -f
 
-DATE = 2009-08-31
-VERSION = 5.44.1.14
+VERSION = 5.44.1.15
 
 SHELL := sh -e
 
@@ -68,11 +67,6 @@ override_dh_install:
 	dh_install --fail-missing
 
 get-orig-source:
-	CURDIR=$$(pwd) && \
-	TMPDIR=$$(mktemp -d /tmp/expect.XXXXXX) && \
-	cd $$TMPDIR && \
-	cvs -d:pserver:anonymous@expect.cvs.sourceforge.net:/cvsroot/expect export -D $(DATE) expect && \
-	mv expect expect-$(VERSION) && \
-	tar -zcf $$CURDIR/expect_$(VERSION).orig.tar.gz . && \
-	rm -rf $$TMPDIR
+	wget -O expect_$(VERSION).orig.tar.gz \
+	     http://downloads.sourceforge.net/project/expect/Expect/$(VERSION)/expect-$(VERSION).tar.gz
 

@@ -1,10 +1,9 @@
 Author: n/a
 Description: Fixes some unsafe traps.
 
-diff -Naurp expect.orig/exp_trap.c expect/exp_trap.c
---- expect.orig/exp_trap.c	2009-08-03 06:58:30.000000000 +0000
-+++ expect/exp_trap.c	2009-08-03 08:37:20.000000000 +0000
-@@ -261,6 +261,18 @@ exp_init_trap()
+--- expect-5.44.1.15.orig/exp_trap.c
++++ expect-5.44.1.15/exp_trap.c
+@@ -261,6 +261,18 @@
  #if defined(SIGSTOP)
  	traps[SIGSTOP].reserved = TRUE;
  #endif

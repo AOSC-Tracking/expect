@@ -1,9 +1,8 @@
 Author: n/a
 Description: Fix header comments.
 
-diff -Naurp expect.orig/tcldbgcf.h.in expect/tcldbgcf.h.in
---- expect.orig/tcldbgcf.h.in	2009-08-03 06:58:30.000000000 +0000
-+++ expect/tcldbgcf.h.in	2009-08-03 08:58:57.000000000 +0000
+--- expect-5.44.1.15.orig/tcldbgcf.h.in
++++ expect-5.44.1.15/tcldbgcf.h.in
 @@ -7,7 +7,8 @@
  #ifndef __NIST_DBG_CF_H__
  #define __NIST_DBG_CF_H__

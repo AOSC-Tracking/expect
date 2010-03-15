@@ -1,10 +1,9 @@
 Author: Ian Jackson <iwj@ubuntu.com>
 Description: expBusy forgets to open fdout (Closes: #440818).
 
-diff -Naurp expect.orig/exp_command.c expect/exp_command.c
---- expect.orig/exp_command.c	2009-08-03 06:58:30.000000000 +0000
-+++ expect/exp_command.c	2009-08-03 08:37:47.000000000 +0000
-@@ -315,7 +315,15 @@ expBusy(esPtr)
+--- expect-5.44.1.15.orig/exp_command.c
++++ expect-5.44.1.15/exp_command.c
+@@ -315,7 +315,15 @@
  	fcntl(x,F_DUPFD,esPtr->fdin);
  	close(x);
      }

@@ -4,9 +4,9 @@ Bug-Debian: http://bugs.debian.org/555746
 Bug: https://sourceforge.net/tracker/?func=detail&aid=2896150&group_id=13179&atid=113179
 Last-Update: 2009-11-12
 
---- expect-5.44.1.14.orig/exp_main_tk.c
-+++ expect-5.44.1.14/exp_main_tk.c
-@@ -101,6 +101,9 @@
+--- expect-5.44.1.15.orig/exp_main_tk.c
++++ expect-5.44.1.15/exp_main_tk.c
+@@ -112,6 +112,9 @@
   *----------------------------------------------------------------------
   */
  
@@ -16,7 +16,7 @@ Last-Update: 2009-11-12
  int
  Tcl_AppInit(interp)
      Tcl_Interp *interp;		/* Interpreter for application. */
-@@ -137,6 +140,8 @@
+@@ -148,6 +151,8 @@
       * they weren't already created by the init procedures called above.
       */
  
@@ -25,7 +25,7 @@ Last-Update: 2009-11-12
      /*
       * Specify a user-specific startup file to invoke if the application
       * is run interactively.  Typically the startup file is "~/.apprc"
-@@ -171,8 +176,6 @@
+@@ -182,8 +187,6 @@
  static int rest = 0;
  
  /* for Expect */

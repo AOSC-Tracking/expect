@@ -1,8 +1,8 @@
-expect (5.44.1.14-6) UNRELEASED; urgency=low
+expect (5.44.1.15-1) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * New upstream release.
 
- -- Sergei Golovan <sgolovan@debian.org>  Wed, 18 Nov 2009 22:54:44 +0300
+ -- Sergei Golovan <sgolovan@debian.org>  Mon, 15 Mar 2010 20:56:14 +0300
 
 expect (5.44.1.14-5) unstable; urgency=low
 
