@@ -36,28 +36,6 @@ Description: Fix implicit definitions throughout (Closes: #441115).
  #include "expect_cf.h"
  #include <stdio.h>
  #include <setjmp.h>
-@@ -116,7 +118,9 @@
- #include <stdlib.h>		/* for malloc */
- #endif
- 
-+#include <tcl.h>
- #include "expect.h"
-+#include "exp_command.h"
- #define TclRegError exp_TclRegError
- 
- /*
-@@ -1492,7 +1496,10 @@
-  *----------------------------------------------------------------------
-  */
- 
--static
-+#ifdef Tcl_ErrnoMsg
-+#undef Tcl_ErrnoMsg
-+#endif
-+
- char *
- Tcl_ErrnoMsg(err)
-     int err;			/* Error number (such as in errno variable). */
 --- expect-5.44.1.15.orig/exp_command.h
 +++ expect-5.44.1.15/exp_command.h
 @@ -7,6 +7,9 @@

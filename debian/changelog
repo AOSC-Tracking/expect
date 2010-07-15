@@ -1,8 +1,10 @@
-expect (5.44.1.15-2) UNRELEASED; urgency=low
+expect (5.44.1.15-2) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * Removed a bit of implicit-declarations patch which included tcl.h into
+    exp_clib.c and redefined memory allocation routines because of Tcl
+    stubs (closes: #588817).
 
- -- Sergei Golovan <sgolovan@debian.org>  Mon, 15 Mar 2010 21:12:58 +0300
+ -- Sergei Golovan <sgolovan@debian.org>  Thu, 15 Jul 2010 18:31:29 +0400
 
 expect (5.44.1.15-1) unstable; urgency=low
 
