@@ -8,21 +8,27 @@ Last-Modified: 2009-11-18
 
 --- expect-5.44.1.15.orig/Makefile.in
 +++ expect-5.44.1.15/Makefile.in
-@@ -331,7 +331,7 @@
+@@ -330,8 +330,10 @@
+ 	( echo pkg_mkIndex . $(PKG_LIB_FILE) \; exit; ) | $(TCLSH)
  
  pkgIndex.tcl-hand:
- 	(echo 'package ifneeded Expect $(PACKAGE_VERSION) \
+-	(echo 'package ifneeded Expect $(PACKAGE_VERSION) \
 -	    [list load [file join $$dir $(PKG_LIB_FILE)]]'\
++	(echo 'if {[package vcompare [info tclversion] @TCL_VERSION@] < 0} return' ; \
++	 echo '' ; \
++	 echo 'package ifneeded Expect $(PACKAGE_VERSION) \
 +	    [list load [file join @prefix@ lib libexpect.so.@PACKAGE_VERSION@]]'\
  	) > pkgIndex.tcl
  
  #========================================================================
 --- expect-5.44.1.15.orig/pkgIndex.in
 +++ expect-5.44.1.15/pkgIndex.in
-@@ -7,4 +7,4 @@
+@@ -7,4 +7,6 @@
  # script is sourced, the variable $dir must contain the
  # full path name of this file's directory.
  
++if {[package vcompare [info tclversion] @TCL_VERSION@] < 0} return
++
 -package ifneeded Expect @EXP_VERSION_FULL@ [list load [file join $dir .. @EXP_SHARED_LIB_FILE@]]
 +package ifneeded Expect @EXP_VERSION_FULL@ [list load [file join @prefix@ lib libexpect.so.@PACKAGE_VERSION@]]
 --- expect-5.44.1.15.orig/tests/cat.test

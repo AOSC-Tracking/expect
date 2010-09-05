@@ -1,8 +1,13 @@
-expect (5.44.1.15-3) UNRELEASED; urgency=low
+expect (5.44.1.15-3) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * Added patch by upstream (proposed by Per Cederqvist) which fixes
+    slow processing of certain regexp patterns by preventing their
+    convertation to glob patterns (closes: #591695).
+  * Don't load Expect package to tclsh 8.4 because it causes a
+    segmentation fault.
+  * Updated package to standards version 3.9.1 (no changes needed).
 
- -- Sergei Golovan <sgolovan@debian.org>  Thu, 15 Jul 2010 18:48:08 +0400
+ -- Sergei Golovan <sgolovan@debian.org>  Sun, 05 Sep 2010 09:48:27 +0400
 
 expect (5.44.1.15-2) unstable; urgency=low
 
