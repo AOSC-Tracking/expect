@@ -1,8 +1,9 @@
-expect (5.44.1.15-4) UNRELEASED; urgency=low
+expect (5.44.1.15-4) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * Added patch by upstream which fixes crash during exact string matching
+    in expect command if the search pattern contains non-ASCII characters.
 
- -- Sergei Golovan <sgolovan@debian.org>  Mon, 06 Sep 2010 15:43:15 +0400
+ -- Sergei Golovan <sgolovan@debian.org>  Wed, 27 Oct 2010 10:29:04 +0400
 
 expect (5.44.1.15-3) unstable; urgency=low
 
