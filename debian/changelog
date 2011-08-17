@@ -1,3 +1,9 @@
+expect (5.45-2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Sergei Golovan <sgolovan@debian.org>  Wed, 17 Aug 2011 22:21:48 +0400
+
 expect (5.45-1) unstable; urgency=low
 
   * New upstream release.
