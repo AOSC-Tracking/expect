@@ -1,0 +1,6 @@
+As of Expect 5.45 expectk was removed from the upstream distribution
+and from the Debian package as well. If you're using expectk replace it
+either by 'expect' and 'package require Tk' or by 'wish' and
+'package require Expect'.
+
+ -- Sergei Golovan <sgolovan@debian.org>  Sat, 13 Aug 2011 18:29:42 +0400
