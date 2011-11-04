@@ -1,8 +1,11 @@
-expect (5.45-2) UNRELEASED; urgency=low
+expect (5.45-2) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * Replaced ckalloc() call in exp_clib.c by malloc() because using the
+    ordinary free() leads to memory corruption after ckalloc() (which is
+    a macro for Tcl_Alloc()). See patches/22-segfault-with-stubs.patch
+    for segfaulting examples.
 
- -- Sergei Golovan <sgolovan@debian.org>  Wed, 17 Aug 2011 22:21:48 +0400
+ -- Sergei Golovan <sgolovan@debian.org>  Fri, 04 Nov 2011 12:14:05 +0400
 
 expect (5.45-1) unstable; urgency=low
 
