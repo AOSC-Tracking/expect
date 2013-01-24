@@ -1,9 +1,9 @@
 expect (5.45-3) unstable; urgency=low
 
-  * Added breaks header to the debian/control file which ensures that the
-    no longer existing expectk package is installed (closes: #686364).
+  * Added conflicts header to the debian/control file which ensures that the
+    no longer existing expectk package gets removed (closes: #686364).
 
- -- Sergei Golovan <sgolovan@debian.org>  Wed, 23 Jan 2013 17:31:34 +0400
+ -- Sergei Golovan <sgolovan@debian.org>  Thu, 24 Jan 2013 11:26:45 +0400
 
 expect (5.45-2) unstable; urgency=low
 
