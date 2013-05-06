@@ -1,3 +1,9 @@
+expect (5.45-4) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Sergei Golovan <sgolovan@debian.org>  Mon, 06 May 2013 13:39:31 +0400
+
 expect (5.45-3) unstable; urgency=low
 
   * Added conflicts header to the debian/control file which ensures that the
