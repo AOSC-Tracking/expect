@@ -5,8 +5,9 @@ expect (5.45-3) unstable; urgency=low
   * Switched to 3.0 (quilt) source package format.
   * Bumped debhelper compatibility level to 8.
   * Bumped standards version to 3.9.4.
+  * Added hardening linker flags.
 
- -- Sergei Golovan <sgolovan@debian.org>  Mon, 06 May 2013 13:08:02 +0400
+ -- Sergei Golovan <sgolovan@debian.org>  Mon, 06 May 2013 13:34:56 +0400
 
 expect (5.45-2) unstable; urgency=low
 
