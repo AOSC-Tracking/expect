@@ -1,11 +1,11 @@
 #!/usr/bin/make -f
 
-VERSION = 5.45
+v = 5.45
 
 SHELL := sh -e
 
 %:
-	dh ${@} --with quilt
+	dh ${@}
 
 CFLAGS = -Wall -g -D_BSD_SOURCE -ansi -D_SVID_SOURCE -D_POSIX_SOURCE
 
@@ -35,7 +35,7 @@ override_dh_auto_configure:
 			     CFLAGS="$(CFLAGS)"
 
 override_dh_auto_build:
-	$(MAKE) SONAME=libexpect.so.$(VERSION)
+	$(MAKE) SONAME=libexpect.so.$(v)
 
 override_dh_auto_install:
 	$(MAKE) DESTDIR=$(CURDIR)/debian/tmp install
@@ -51,16 +51,17 @@ override_dh_auto_install:
 	    fi; \
 	done
 	# Fixing library name
-	mv debian/tmp/usr/lib/expect$(VERSION)/libexpect$(VERSION).so debian/tmp/usr/lib/libexpect.so.$(VERSION)
+	mv debian/tmp/usr/lib/expect$(v)/libexpect$(v).so debian/tmp/usr/lib/libexpect.so.$(v)
 	mkdir -p -m 755 debian/tmp/usr/lib/tcltk
-	mv debian/tmp/usr/lib/expect$(VERSION) debian/tmp/usr/lib/tcltk
+	mv debian/tmp/usr/lib/expect$(v) debian/tmp/usr/lib/tcltk
 	# Fixing permissions
-	chmod 0644 debian/tmp/usr/lib/tcltk/expect$(VERSION)/pkgIndex.tcl
+	chmod 0644 debian/tmp/usr/lib/tcltk/expect$(v)/pkgIndex.tcl
 
 override_dh_install:
 	dh_install --fail-missing
 
 get-orig-source:
-	wget -O expect_$(VERSION).orig.tar.gz \
-	     http://downloads.sourceforge.net/project/expect/Expect/$(VERSION)/expect$(VERSION).tar.gz
+	wget -O expect_$(v).orig.tar.gz \
+	     http://prdownloads.sourceforge.net/expect/expect$(v).tar.gz
 
+.PHONY: override_dh_auto_clean override_dh_auto_configure override_dh_auto_build override_dh_auto_install override_dh_install get-orig-source

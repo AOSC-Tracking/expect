@@ -2,10 +2,10 @@ Source: expect
 Section: interpreters
 Priority: optional
 Maintainer: Sergei Golovan <sgolovan@debian.org>
-Build-Depends: debhelper (>= 7.0.50~), quilt (>=0.46-7), autotools-dev, autoconf,
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, autoconf,
  tcl8.5-dev
 Build-Conflicts: autoconf2.13
-Standards-Version: 3.9.2
+Standards-Version: 3.9.4
 Homepage: http://sourceforge.net/projects/expect/
 
 Package: expect
