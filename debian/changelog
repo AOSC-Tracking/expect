@@ -1,8 +1,9 @@
-expect (5.45-4) UNRELEASED; urgency=low
+expect (5.45-4) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * Execute tclsh8.5 instead of tclsh in expect scripts because tcl8.5
+    will stop providing /usr/bin/tclsh.
 
- -- Sergei Golovan <sgolovan@debian.org>  Mon, 06 May 2013 13:39:31 +0400
+ -- Sergei Golovan <sgolovan@debian.org>  Sun, 06 Oct 2013 09:00:38 +0400
 
 expect (5.45-3) unstable; urgency=low
 
