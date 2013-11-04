@@ -1,3 +1,9 @@
+expect (5.45-6) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Sergei Golovan <sgolovan@debian.org>  Mon, 04 Nov 2013 08:34:38 +0400
+
 expect (5.45-5) unstable; urgency=low
 
   * Added patch which replaces memcpy my memmove for copying possibly
