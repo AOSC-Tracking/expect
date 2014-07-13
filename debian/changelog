@@ -1,8 +1,17 @@
-expect (5.45-6) UNRELEASED; urgency=low
+expect (5.45-6) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * Split the expect package into expect and tcl-expect where the libexpect
+    library and the Tcl package are moved. Made the tcl-expect package
+    multiarch same.
+  * Renamed the expect-dev package into tcl-expect-dev and moved the included
+    scripts into the main expect package.
+  * Build expect with Tcl 8.6.
+  * Use CFLAGS from the dpkg build flags. Fixed potential security bug in
+    printf format handling.
+  * Bumped the debhelper compatibility version to 9.
+  * Bumped standards version to 3.9.5.
 
- -- Sergei Golovan <sgolovan@debian.org>  Mon, 04 Nov 2013 08:34:38 +0400
+ -- Sergei Golovan <sgolovan@debian.org>  Sun, 13 Jul 2014 21:02:52 +0400
 
 expect (5.45-5) unstable; urgency=low
 
