@@ -1,3 +1,9 @@
+expect (5.45-7) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Sergei Golovan <sgolovan@debian.org>  Mon, 14 Jul 2014 11:30:48 +0400
+
 expect (5.45-6) unstable; urgency=low
 
   * Split the expect package into expect and tcl-expect where the libexpect
