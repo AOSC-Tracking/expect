@@ -1,1 +1,1 @@
-expect: package-name-doesnt-match-sonames
+tcl-expect: package-name-doesnt-match-sonames

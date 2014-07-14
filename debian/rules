@@ -11,8 +11,14 @@ include /usr/share/dpkg/default.mk
 
 CFLAGS += -Wall -g -D_BSD_SOURCE -ansi -D_SVID_SOURCE -D_POSIX_SOURCE
 
+LINKS = debian/expect.links debian/tcl-expect.links debian/tcl-expect-dev.links
+
+debian/%.links: debian/%.links.in
+	sed 's/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g' $< > $@
+
 override_dh_auto_clean:
 	dh_auto_clean
+	rm -f debian/*.links
 	rm -f *.a *.o
 	rm -rf shared
 	rm -f expect_cf.h tcldbgcf.h
@@ -41,13 +47,14 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	$(MAKE) DESTDIR=$(CURDIR)/debian/tmp install
-	# Renaming expect scripts
+	# Rename expect scripts
 	for SCRIPT in debian/tmp/usr/bin/*; do \
 	    if [ "`basename $$SCRIPT`" != "expect" ] ; then \
 		sed -e 's/^exec tclsh /exec tclsh$(tclv) /' $$SCRIPT >`dirname $$SCRIPT`/expect_`basename $$SCRIPT`; \
 		rm $$SCRIPT ; \
 	    fi; \
 	done
+	# Fix manpages
 	for MANPAGE in debian/tmp/usr/share/man/man1/*; do \
 	    if [ "`basename $$MANPAGE`" != "expect.1" ] ; then \
 		mv $$MANPAGE `dirname $$MANPAGE`/expect_`basename $$MANPAGE`; \
@@ -55,12 +62,17 @@ override_dh_auto_install:
 	done
 	cp debian/tmp/usr/share/man/man1/expect.1 debian/tmp/usr/share/man/man3/Expect.3tcl
 	sed -i -e's:\.TH EXPECT 1:.TH EXPECT 3tcl:' debian/tmp/usr/share/man/man3/Expect.3tcl
-	# Fixing library name
+	# Fix library name
 	mv debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/expect$(v)/libexpect$(v).so debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/libexpect.so.$(v)
 	mkdir -p -m 755 debian/tmp/usr/lib/tcltk/$(DEB_HOST_MULTIARCH)
 	mv debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/expect$(v) debian/tmp/usr/lib/tcltk/$(DEB_HOST_MULTIARCH)
-	# Fixing permissions
+	# Fix pkgIndex.tcl
+	sed -i -e's:usr lib:usr lib $(DEB_HOST_MULTIARCH):' debian/tmp/usr/lib/tcltk/$(DEB_HOST_MULTIARCH)/expect$(v)/pkgIndex.tcl
+	# Fix permissions
 	chmod 0644 debian/tmp/usr/lib/tcltk/$(DEB_HOST_MULTIARCH)/expect$(v)/pkgIndex.tcl
+
+override_dh_link: $(LINKS)
+	dh_link
 
 override_dh_install:
 	dh_install --fail-missing

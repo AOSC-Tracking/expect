@@ -11,7 +11,7 @@ expect (5.45-6) unstable; urgency=low
   * Bumped the debhelper compatibility version to 9.
   * Bumped standards version to 3.9.5.
 
- -- Sergei Golovan <sgolovan@debian.org>  Sun, 13 Jul 2014 21:02:52 +0400
+ -- Sergei Golovan <sgolovan@debian.org>  Mon, 14 Jul 2014 08:30:57 +0400
 
 expect (5.45-5) unstable; urgency=low
 

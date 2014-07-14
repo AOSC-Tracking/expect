@@ -14,6 +14,7 @@ Depends: ${misc:Depends}, ${shlibs:Depends}
 Conflicts: expectk (<< 5.45), expect-dev
 Provides: expect-dev
 Replaces: expect-dev
+Recommends: tcl8.6, tk8.6
 Multi-Arch: foreign
 Description: Automates interactive applications
  Expect is a tool for automating interactive applications according to a script.
@@ -28,7 +29,7 @@ Description: Automates interactive applications
 
 Package: tcl-expect
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: libtcl8.6, ${misc:Depends}, ${shlibs:Depends}
 Conflicts: expectk (<< 5.45)
 Replaces: expect
 Suggests: expect
@@ -49,7 +50,6 @@ Section: devel
 Architecture: any
 Depends: ${misc:Depends}, tcl-expect (= ${binary:Version}), tcl8.6-dev
 Replaces: expect (<< 5.44.1.14)
-Recommends: tk8.5-dev
 Multi-Arch: same
 Description: Automates interactive applications (development)
  Expect is a tool for automating interactive applications according to a script.
