@@ -1,3 +1,9 @@
+expect (5.45-8) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Sergei Golovan <sgolovan@debian.org>  Fri, 23 Oct 2015 11:38:11 +0300
+
 expect (5.45-7) unstable; urgency=medium
 
   * Applied a few fixes by upstream which were included in Expect 5.45.3
