@@ -1,8 +1,10 @@
-expect (5.45-7) UNRELEASED; urgency=medium
+expect (5.45-7) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * Applied a few fixes by upstream which were included in Expect 5.45.3
+    never released as a tarball (closes: #799301).
+  * Bumped standards version to 3.9.6.
 
- -- Sergei Golovan <sgolovan@debian.org>  Mon, 14 Jul 2014 11:30:48 +0400
+ -- Sergei Golovan <sgolovan@debian.org>  Fri, 23 Oct 2015 11:27:59 +0300
 
 expect (5.45-6) unstable; urgency=low
 

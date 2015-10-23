@@ -13,3 +13,6 @@
 22-segfault-with-stubs.patch
 23-memmove.patch
 24-format.patch
+25-matchlen.patch
+26-eof-handling.patch
+27-exp_chan.patch
