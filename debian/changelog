@@ -1,3 +1,9 @@
+expect (5.45-9) UNRELEASED; urgency=medium
+
+  * NOT RELEASED YET
+
+ -- Sergei Golovan <sgolovan@debian.org>  Sat, 15 Jul 2017 08:37:32 +0300
+
 expect (5.45-8) unstable; urgency=medium
 
   * Added a patch by Georg-Johann Lay which now properly checks for EOF
