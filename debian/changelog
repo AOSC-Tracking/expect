@@ -1,8 +1,11 @@
-expect (5.45-8) UNRELEASED; urgency=medium
+expect (5.45-8) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * Added a patch by Georg-Johann Lay which now properly checks for EOF
+    and doesn't lose input when there are some characters in the input buffer
+    and EOF flag happens.
+  * Bumped standards version to 4.0.0.
 
- -- Sergei Golovan <sgolovan@debian.org>  Fri, 23 Oct 2015 11:38:11 +0300
+ -- Sergei Golovan <sgolovan@debian.org>  Sat, 15 Jul 2017 08:21:00 +0300
 
 expect (5.45-7) unstable; urgency=medium
 

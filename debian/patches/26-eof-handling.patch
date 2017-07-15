@@ -1,9 +1,10 @@
-Author: Upstream
-Description: Report and fix both by Nils Carlson.
+Author: Georg-Johann Lay
+Description: Enhancement of a bugfix by Nils Carlson.
  Replaced a cc==0 check with proper Tcl_Eof() check.
-Last-Modified: Fri, 23 Oct 2015 11:09:07 +0300
+Last-Modified: Fri, 14 Jul 2017 17:07:47 +0300
 Bug: http://sourceforge.net/p/expect/patches/18/
 Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=799301
+See-Also: https://gcc.gnu.org/ml/gcc/2017-06/msg00000.html
 
 --- a/expect.c
 +++ b/expect.c
@@ -17,7 +18,7 @@ Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=799301
 -	/* but it should be looked at again anyway". */
 -	if (cc == 0) {
 +
-+	if (Tcl_Eof(esPtr->channel)) {
++	if (cc == 0 && Tcl_Eof(esPtr->channel)) {
  	    cc = EXP_EOF;
 -	} else if (cc > 0) {
 -	    /* successfully read data */

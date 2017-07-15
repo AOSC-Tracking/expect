@@ -5,7 +5,7 @@ Maintainer: Sergei Golovan <sgolovan@debian.org>
 Build-Depends: debhelper (>= 9.0.0), dpkg-dev (>= 1.16.1~), autotools-dev,
  autoconf, tcl8.6-dev
 Build-Conflicts: autoconf2.13
-Standards-Version: 3.9.6
+Standards-Version: 4.0.0
 Homepage: http://sourceforge.net/projects/expect/
 
 Package: expect
