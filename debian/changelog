@@ -1,8 +1,17 @@
-expect (5.45-9) UNRELEASED; urgency=medium
+expect (5.45.3-1) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * New upstream release.
+  * Remove patches which are were taken from upstream.
+  * Demote tk8.6 from recommended to suggested in the expect dependencies
+    list (closes: #876018).
+  * Apply patch by Helmut Grohne which replaces a few calls to AC_TRY_RUN
+    in the configure.in script to make the package cross compilable
+    (closes: #873730).
+  * Bumped the debhelper compatibility version to 10.
+  * Remove the now useless build-dependency on autotools-dev.
+  * Bumped standards version to 4.1.1.
 
- -- Sergei Golovan <sgolovan@debian.org>  Sat, 15 Jul 2017 08:37:32 +0300
+ -- Sergei Golovan <sgolovan@debian.org>  Thu, 26 Oct 2017 11:14:59 +0300
 
 expect (5.45-8) unstable; urgency=medium
 

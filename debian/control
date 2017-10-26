@@ -2,10 +2,9 @@ Source: expect
 Section: interpreters
 Priority: optional
 Maintainer: Sergei Golovan <sgolovan@debian.org>
-Build-Depends: debhelper (>= 9.0.0), dpkg-dev (>= 1.16.1~), autotools-dev,
- autoconf, tcl8.6-dev
+Build-Depends: debhelper (>= 10.0.0), dpkg-dev (>= 1.16.1~), autoconf, tcl8.6-dev
 Build-Conflicts: autoconf2.13
-Standards-Version: 4.0.0
+Standards-Version: 4.1.1
 Homepage: http://sourceforge.net/projects/expect/
 
 Package: expect
@@ -14,7 +13,8 @@ Depends: ${misc:Depends}, ${shlibs:Depends}
 Conflicts: expect-dev
 Provides: expect-dev
 Replaces: expect-dev
-Recommends: tcl8.6, tk8.6
+Recommends: tcl8.6
+Suggests: tk8.6
 Multi-Arch: foreign
 Description: Automates interactive applications
  Expect is a tool for automating interactive applications according to a script.

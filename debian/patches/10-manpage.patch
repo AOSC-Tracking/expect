@@ -17,17 +17,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  
  The
  .B \-c
-@@ -173,7 +173,8 @@
- .B \-b
- flag.
- (When using Expectk, this option is specified as
--.BR \-buffer .)  Note that stdio-buffering may still take place however this shouldn't cause problems when reading from a fifo or stdin.
-+.BR \-buffer .)  Note that stdio-buffering may still take place however this
-+shouldn't cause problems when reading from a fifo or stdin.
- .PP
- If the string "\-" is supplied as a filename, standard input is read instead.
- (Use "./\-" to read from a file actually named "\-".)
-@@ -207,7 +208,7 @@
+@@ -209,7 +209,7 @@
  original arguments (including the script name) in the variable
  .IR argv .
  
@@ -36,7 +26,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  
  Note that the usual getopt(3) and execve(2) conventions must be observed
  when adding arguments to the #! line.
-@@ -291,7 +292,7 @@
+@@ -293,7 +293,7 @@
  program.)
  .I
  .TP 6
@@ -45,7 +35,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  closes the connection to the current process.
  Most interactive programs will detect EOF on their stdin and exit;
  thus
-@@ -320,7 +321,7 @@
+@@ -322,7 +322,7 @@
  
  The 
  .B \-slave
@@ -54,7 +44,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  When the connection is closed, the slave is automatically closed as
  well if still open.
  
-@@ -337,7 +338,7 @@
+@@ -339,7 +339,7 @@
  .B wait
  below for more info.
  .TP
@@ -63,7 +53,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  controls a Tcl debugger allowing you to step through statements, set
  breakpoints, etc.
  
-@@ -355,7 +356,7 @@
+@@ -357,7 +357,7 @@
  The
  .B debug
  command does not change any traps.  Compare this to starting Expect with the 
@@ -72,7 +62,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  flag (see above).
  
  See the README file or SEE ALSO (below)
-@@ -385,7 +386,7 @@
+@@ -387,7 +387,7 @@
  .nf
  
      send_user "password?\\ "
@@ -81,7 +71,7 @@ Description: Fixes sample expect shebang and excapes dashes.
      for {} 1 {} {
          if {[fork]!=0} {sleep 3600;continue}
          disconnect
-@@ -452,7 +453,7 @@
+@@ -454,7 +454,7 @@
  .B exit
  is implicitly executed if the end of the script is reached.
  .TP
@@ -90,7 +80,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  The command
  .B exp_continue
  allows
-@@ -462,7 +463,7 @@
+@@ -464,7 +464,7 @@
  default
  .B exp_continue
  resets the timeout timer. The
@@ -99,7 +89,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  flag prevents timer from being restarted. (See
  .B expect
  for more information.)
-@@ -625,8 +626,8 @@
+@@ -627,8 +627,8 @@
  be used to protect patterns that might otherwise match
  .B expect
  flags from doing so.
@@ -110,7 +100,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  
  .IP
  For example, the following fragment looks for a successful login.
-@@ -733,7 +734,7 @@
+@@ -735,7 +735,7 @@
  through
  .IR expect_out(9,string) .
  If the
@@ -119,7 +109,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  flag is used before a pattern,
  the starting and ending indices (in a form suitable for
  .BR lrange )
-@@ -780,7 +781,7 @@
+@@ -782,7 +782,7 @@
      set expect_out(buffer) abbbcabkkkk
  
  .fi
@@ -128,7 +118,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  flush the output buffer without reading any more output from the
  process.
  .IP
-@@ -788,7 +789,7 @@
+@@ -790,7 +790,7 @@
  This may be prevented by prefixing a pattern with the
  .B \-notransfer
  flag.  This flag is especially useful in experimenting (and can be
@@ -137,7 +127,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  
  The spawn id associated with the matching output (or eof or
  full_buffer) is stored in
-@@ -872,9 +873,9 @@
+@@ -874,9 +874,9 @@
  
      expect {
          Password: {
@@ -149,7 +139,7 @@ Description: Fixes sample expect shebang and excapes dashes.
              send_user "\\n"
              send "$expect_out(1,string)\\r"
              stty echo
-@@ -889,7 +890,7 @@
+@@ -891,7 +891,7 @@
              send_user \\
                  "connection to host failed: $expect_out(buffer)"
              exit
@@ -158,7 +148,7 @@ Description: Fixes sample expect shebang and excapes dashes.
      }
  
  .fi
-@@ -1021,14 +1022,14 @@
+@@ -1023,14 +1023,14 @@
  By default, it reports on the current spawn id.  An optional spawn id specification may be given for information on that spawn id.  For example
  .nf
  
@@ -176,7 +166,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  
  The output of the \-info flag can be reused as the argument to expect_before.
  .TP
-@@ -1121,7 +1122,7 @@
+@@ -1123,7 +1123,7 @@
  .ta \w'    interact 'u +\w'$CTRLZ  'u +\w'{'u
      set CTRLZ \\032
      interact {
@@ -185,7 +175,7 @@ Description: Fixes sample expect shebang and excapes dashes.
          \\001   {send_user "you typed a control\-A\\n";
                  send "\\001"
                 }
-@@ -1150,8 +1151,8 @@
+@@ -1152,8 +1152,8 @@
  flag may be used to protect patterns that might otherwise match
  .B interact
  flags from doing so.
@@ -196,7 +186,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  
  The
  .B \-re
-@@ -1197,7 +1198,7 @@
+@@ -1199,7 +1199,7 @@
  messages:
  .nf
  
@@ -205,7 +195,7 @@ Description: Fixes sample expect shebang and excapes dashes.
          $spawn_id 
  
  .fi
-@@ -1296,9 +1297,9 @@
+@@ -1298,9 +1298,9 @@
  .nf
  
      interact {
@@ -218,7 +208,7 @@ Description: Fixes sample expect shebang and excapes dashes.
      }
  
  .fi
-@@ -1314,11 +1315,11 @@
+@@ -1316,11 +1316,11 @@
  .nf
  
      proc lognumber {} {
@@ -232,7 +222,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  
  .fi
  .IP
-@@ -1389,7 +1390,7 @@
+@@ -1391,7 +1391,7 @@
  command, except that any_spawn_id is not meaningful in
  .BR interact .)
  All following flags and
@@ -241,7 +231,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  If no
  .B \-input
  appears,
-@@ -1427,7 +1428,7 @@
+@@ -1429,7 +1429,7 @@
  It is possible to change the processes that are being interacted with
  by using indirect spawn ids.  (Indirect spawn ids are described in the
  section on the expect command.)  Indirect spawn ids may be specified
@@ -250,7 +240,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  .TP
  .B interpreter " [args]"
  causes the user to be interactively prompted for
-@@ -1513,18 +1514,18 @@
+@@ -1515,18 +1515,18 @@
  flag.
  
  The
@@ -272,7 +262,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  flag causes log_user to return a description of the
  most recent non-info arguments given.
  .TP
-@@ -1645,7 +1646,7 @@
+@@ -1647,7 +1647,7 @@
  Any string can be preceded by "\-\-" whether or not it actually looks
  like a flag.  This provides a reliable mechanism to specify variable strings
  without being tripped up by those that accidentally look like flags.
@@ -281,7 +271,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  
  The
  .B \-i
-@@ -1669,7 +1670,7 @@
+@@ -1671,7 +1671,7 @@
  The
  .B \-break
  flag generates a break condition.  This only makes sense if the spawn
@@ -290,7 +280,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  spawned a process such as tip, you should use tip's convention for
  generating a break.
  
-@@ -1772,7 +1773,7 @@
+@@ -1774,7 +1774,7 @@
  except that the output is sent to stderr rather than the current
  process.
  .TP
@@ -299,7 +289,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  is like
  .BR send ,
  except that the string is only sent to the log file (see
-@@ -1949,7 +1950,7 @@
+@@ -1951,7 +1951,7 @@
  The variable
  .I spawn_out(slave,fd)
  is set to a file identifier corresponding to the pty slave.
@@ -308,7 +298,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  
  The
  .B \-ignore
-@@ -1976,7 +1977,7 @@
+@@ -1978,7 +1978,7 @@
  .fi
  
  The
@@ -317,7 +307,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  flag causes strace to return a description of the
  most recent non-info arguments given.
  .TP
-@@ -2016,7 +2017,7 @@
+@@ -2018,7 +2018,7 @@
  
      stty \-echo
      send_user "Password: "
@@ -326,7 +316,7 @@ Description: Fixes sample expect shebang and excapes dashes.
      set password $expect_out(1,string)
      stty echo
  
-@@ -2151,7 +2152,7 @@
+@@ -2153,7 +2153,7 @@
      trap exit {SIGINT SIGTERM}
  
  .fi
@@ -335,7 +325,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  to start the interactive debugger.  This is due to the following trap:
  .nf
  
-@@ -2192,9 +2193,9 @@
+@@ -2194,9 +2194,9 @@
  normally returns a list of four integers.
  The first integer is the pid of the process that was waited upon.
  The second integer is the corresponding spawn id.
@@ -347,7 +337,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  the value of errno set by the operating system.  The global variable
  errorCode is also set.
  
-@@ -2210,7 +2211,7 @@
+@@ -2212,7 +2212,7 @@
  flag declares the process to wait corresponding to the named spawn_id
  (NOT the process id).
  Inside a SIGCHLD handler,
@@ -356,7 +346,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  
  The
  .B \-nowait
-@@ -2221,7 +2222,7 @@
+@@ -2223,7 +2223,7 @@
  The
  .B wait
  command may also be used wait for a forked process using the arguments
@@ -365,7 +355,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  executed at any time.  There is no control over which process is
  reaped.  However, the return value can be checked for the process id.
  
-@@ -2372,7 +2373,7 @@
+@@ -2374,7 +2374,7 @@
  .nf
  
      set env(SHELL) /bin/sh
@@ -374,7 +364,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  
  .fi
  
-@@ -2425,7 +2426,7 @@
+@@ -2427,7 +2427,7 @@
  to set a flag in the trap code.  Then check the flag immediately after
  the command (i.e., sleep).
  
@@ -383,7 +373,7 @@ Description: Fixes sample expect shebang and excapes dashes.
  concept of timeouts in general.
  
  .SH "EXPECT HINTS"
-@@ -2447,7 +2448,7 @@
+@@ -2449,7 +2449,7 @@
      set prompt "(%|#|\\\\$) $"          ;# default prompt
      catch {set prompt $env(EXPECT_PROMPT)}
  

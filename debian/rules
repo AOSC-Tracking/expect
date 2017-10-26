@@ -1,6 +1,7 @@
 #!/usr/bin/make -f
 
 v = 5.45
+vv = 5.45.3
 tclv = 8.6
 
 DPKG_EXPORT_BUILDFLAGS = 1
@@ -14,7 +15,9 @@ CFLAGS += -Wall -g -D_BSD_SOURCE -ansi -D_SVID_SOURCE -D_POSIX_SOURCE
 LINKS = debian/expect.links debian/tcl-expect.links debian/tcl-expect-dev.links
 
 debian/%.links: debian/%.links.in
-	sed 's/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g' $< > $@
+	sed -e 's/@DEB_HOST_MULTIARCH@/$(DEB_HOST_MULTIARCH)/g' \
+	    -e 's/@V@/$(v)/g' \
+	    -e 's/@VV@/$(vv)/g' $< > $@
 
 override_dh_auto_clean:
 	dh_auto_clean
@@ -63,13 +66,13 @@ override_dh_auto_install:
 	cp debian/tmp/usr/share/man/man1/expect.1 debian/tmp/usr/share/man/man3/Expect.3tcl
 	sed -i -e's:\.TH EXPECT 1:.TH EXPECT 3tcl:' debian/tmp/usr/share/man/man3/Expect.3tcl
 	# Fix library name
-	mv debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/expect$(v)/libexpect$(v).so debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/libexpect.so.$(v)
+	mv debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/expect$(vv)/libexpect$(vv).so debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/libexpect.so.$(vv)
 	mkdir -p -m 755 debian/tmp/usr/lib/tcltk/$(DEB_HOST_MULTIARCH)
-	mv debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/expect$(v) debian/tmp/usr/lib/tcltk/$(DEB_HOST_MULTIARCH)
+	mv debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/expect$(vv) debian/tmp/usr/lib/tcltk/$(DEB_HOST_MULTIARCH)
 	# Fix pkgIndex.tcl
-	sed -i -e's:usr lib:usr lib $(DEB_HOST_MULTIARCH):' debian/tmp/usr/lib/tcltk/$(DEB_HOST_MULTIARCH)/expect$(v)/pkgIndex.tcl
+	sed -i -e's:usr lib:usr lib $(DEB_HOST_MULTIARCH):' debian/tmp/usr/lib/tcltk/$(DEB_HOST_MULTIARCH)/expect$(vv)/pkgIndex.tcl
 	# Fix permissions
-	chmod 0644 debian/tmp/usr/lib/tcltk/$(DEB_HOST_MULTIARCH)/expect$(v)/pkgIndex.tcl
+	chmod 0644 debian/tmp/usr/lib/tcltk/$(DEB_HOST_MULTIARCH)/expect$(vv)/pkgIndex.tcl
 
 override_dh_link: $(LINKS)
 	dh_link
@@ -78,8 +81,8 @@ override_dh_install:
 	dh_install --fail-missing
 
 get-orig-source:
-	wget -O expect_$(v).orig.tar.gz \
-	     http://prdownloads.sourceforge.net/expect/expect$(v).tar.gz
+	wget -O expect_$(vv).orig.tar.gz \
+	     http://prdownloads.sourceforge.net/expect/expect$(vv).tar.gz
 
 .PHONY: override_dh_auto_clean override_dh_auto_configure override_dh_auto_build \
 	override_dh_auto_install override_dh_install get-orig-source
