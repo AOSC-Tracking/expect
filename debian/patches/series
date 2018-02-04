@@ -12,5 +12,4 @@
 18-non-linux.patch
 22-segfault-with-stubs.patch
 24-format.patch
-26-eof-handling.patch
 28-cross.patch

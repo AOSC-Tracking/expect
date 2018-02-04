@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 v = 5.45
-vv = 5.45.3
+vv = 5.45.4
 tclv = 8.6
 
 DPKG_EXPORT_BUILDFLAGS = 1

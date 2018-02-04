@@ -1,8 +1,11 @@
-expect (5.45.3-2) UNRELEASED; urgency=medium
+expect (5.45.4-1) unstable; urgency=medium
 
-  * NOT RELEASED YET
+  * New upstream release.
+  * Remove a patch by Georg-Johann Lay introduced in 5.45-8 because it has
+    been applied upstream.
+  * Bump standards version to 4.1.3.
 
- -- Sergei Golovan <sgolovan@debian.org>  Thu, 26 Oct 2017 11:38:56 +0300
+ -- Sergei Golovan <sgolovan@debian.org>  Sun, 04 Feb 2018 14:17:06 +0300
 
 expect (5.45.3-1) unstable; urgency=medium
 
