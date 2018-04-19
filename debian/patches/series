@@ -13,3 +13,4 @@
 22-segfault-with-stubs.patch
 24-format.patch
 28-cross.patch
+29-suggest-tk.patch

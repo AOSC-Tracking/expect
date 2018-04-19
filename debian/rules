@@ -80,9 +80,5 @@ override_dh_link: $(LINKS)
 override_dh_install:
 	dh_install --fail-missing
 
-get-orig-source:
-	wget -O expect_$(vv).orig.tar.gz \
-	     http://prdownloads.sourceforge.net/expect/expect$(vv).tar.gz
-
 .PHONY: override_dh_auto_clean override_dh_auto_configure override_dh_auto_build \
-	override_dh_auto_install override_dh_install get-orig-source
+	override_dh_auto_install override_dh_install
