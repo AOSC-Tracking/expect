@@ -1,5 +1,6 @@
 Author: LaMont Jones <lamont@debian.org>
 Description: Fix implicit definitions throughout (Closes: #441115).
+ Also, closes #1066257.
 
 --- a/exp_chan.c
 +++ b/exp_chan.c
@@ -23,6 +24,14 @@ Description: Fix implicit definitions throughout (Closes: #441115).
  #include "expect_cf.h"
  #include <stdio.h>
  #include <setjmp.h>
+@@ -1734,6 +1737,7 @@
+ #define sysreturn(x)	return(errno = x, -1)
+ 
+ void exp_init_pty();
++void exp_init_tty();
+ 
+ /*
+    The following functions are linked from the Tcl library.  They
 --- a/exp_command.h
 +++ b/exp_command.h
 @@ -7,6 +7,9 @@

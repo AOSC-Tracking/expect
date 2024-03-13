@@ -1,3 +1,12 @@
+expect (5.45.4-3) unstable; urgency=medium
+
+  * Fix impicit declaration of exp_init_tty() in exp_clib.c (closes: #1066257).
+  * Fix a typo in the decryptdir(1) manpage (closes: #1036463).
+  * Bump the debhelper compatibility level to 13.
+  * Bump standards version to 4.6.2.
+
+ -- Sergei Golovan <sgolovan@debian.org>  Wed, 13 Mar 2024 15:55:45 +0300
+
 expect (5.45.4-2) unstable; urgency=medium
 
   * Move the tcl8.6 package to strict dependencies of expect, since all
