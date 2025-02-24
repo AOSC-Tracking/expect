@@ -1,3 +1,14 @@
+expect (5.45.4-4) unstable; urgency=medium
+
+  * Remove the ftp-rfc script from the binary package because it relies on
+    no longer functional FTP host (closes: #1086569).
+  * Apply patches with editorial changes to the expect manpages
+    (closes: #1071422, #1086693, #1090339, #1090341, #1090348, #1090714,
+    #1090720).
+  * Bump standards version to 4.7.0.
+
+ -- Sergei Golovan <sgolovan@debian.org>  Mon, 24 Feb 2025 15:49:29 +0300
+
 expect (5.45.4-3) unstable; urgency=medium
 
   * Fix impicit declaration of exp_init_tty() in exp_clib.c (closes: #1066257).

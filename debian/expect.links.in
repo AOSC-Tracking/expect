@@ -3,7 +3,6 @@
 /usr/bin/expect_cryptdir /usr/bin/cryptdir
 /usr/bin/expect_decryptdir /usr/bin/decryptdir
 /usr/bin/expect_dislocate /usr/bin/dislocate
-/usr/bin/expect_ftp-rfc /usr/bin/ftp-rfc
 /usr/bin/expect_kibitz /usr/bin/kibitz
 /usr/bin/expect_lpunlock /usr/bin/lpunlock
 #/usr/bin/expect_mkpasswd /usr/bin/mkpasswd

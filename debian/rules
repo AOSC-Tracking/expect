@@ -50,6 +50,8 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	$(MAKE) DESTDIR=$(CURDIR)/debian/tmp install
+	# Remove the example which relies on defunct FTP host (see https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1086569)
+	rm debian/tmp/usr/bin/ftp-rfc
 	# Rename expect scripts
 	for SCRIPT in debian/tmp/usr/bin/*; do \
 	    if [ "`basename $$SCRIPT`" != "expect" ] ; then \
